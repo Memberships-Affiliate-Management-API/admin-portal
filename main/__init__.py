@@ -1,14 +1,14 @@
 from flask import Flask
-from flask_caching import Cache
+from backend.src.admin_requests import api_requests
 from config import config_instance
 from authlib.integrations.flask_client import OAuth
 # TODO: consider upgrading the cache service from version 2 of this api
 from backend.src.utils.utils import clear_cache
+from backend.src.admin_requests.api_requests import APIRequests
+from backend.src.cache_manager.cache_manager import app_cache
 
-app_cache: Cache = Cache(config=config_instance.cache_dict())
 
-default_timeout: int = 60 * 60 * 6
-
+api_requests_data: APIRequests = APIRequests()
 # github authenticate - enables developers to easily sign-up to our api
 oauth = OAuth()
 github_authorize = oauth.register(
@@ -30,8 +30,11 @@ def create_app(config_class=config_instance):
 
     app_cache.init_app(app=app, config=config_class.cache_dict())
     oauth.init_app(app=app, cache=app_cache)
+
+    api_requests_data.init_app(app=app)
+
     # user facing or public facing api's
-    from backend.src.default_handlers.routes import default_handlers_bp
+    from backend.src.handlers.routes import default_handlers_bp
 
     # importing admin app blueprints
     from main.app.admin.routes.dashboard import admin_dashboard_bp
