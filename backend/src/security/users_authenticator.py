@@ -119,7 +119,7 @@ def encode_auth_token(uid: str) -> str:
             'sub': uid
         }
         token = jwt.encode(payload=payload, key=str(current_app.config.get('SECRET_KEY')), algorithm='HS256')
-        return token.decode()
+        return token
     except jwt.InvalidAlgorithmError as e:
         return str(e)
 
@@ -154,7 +154,7 @@ def send_get_user_request(uid: str) -> Optional[dict]:
         :return: dict -> user record
     """
     # admin api base url
-    _base_url: str = os.environ.get("ADMIN_APP_BASEURL")
+    _base_url: str = config_instance.BASE_URL
     _user_endpoint: str = "_api/v1/admin/users/get"
     _data: dict = dict(uid=uid, SECRET_KEY=config_instance.SECRET_KEY)
     response = requests.post(url=f"{_base_url}{_user_endpoint}", json=_data)
@@ -193,6 +193,7 @@ def handle_users_auth(func):
         # NOTE: if running on development server by-pass authentication and return admin user
         if not token:
             return redirect(url_for('admin_home.admin_home', path='login'))
+
         try:
             uid: Optional[str] = decode_auth_token(auth_token=token)
             if bool(uid):
@@ -210,8 +211,6 @@ def handle_users_auth(func):
         except jwt.DecodeError:
             flash('Error decoding your token please login again', 'warning')
             return redirect(url_for('memberships_main.memberships_main_routes', path='login'))
-
-        # TODO fix this with an exception that relates to the operations here
 
         except Exception:
             flash('Unable to locate your account please create a new account', 'warning')
