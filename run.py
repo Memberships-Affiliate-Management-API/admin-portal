@@ -1,6 +1,14 @@
 """
-    will start main application as a web service
+    **ADMIN Application for Memberships & Affiliates Management API**
+        This application is intended for use by system administrators of memberships and Affiliates API
+
 """
+__author__ = "mobius-crypt"
+__email__ = "mobiusndou@gmail.com"
+__twitter__ = "@blueitserver"
+__github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affiliate-api"
+__github_profile__ = "https://github.com/freelancing-solutions/"
+
 import os
 from config import config_instance
 from main import create_app
