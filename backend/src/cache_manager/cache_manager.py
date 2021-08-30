@@ -27,9 +27,17 @@ class CacheManager:
     def cache(self) -> Cache:
         return self.app_cache
 
-    def clear_cache(self, func: Callable, kwargs: dict) -> bool:
+    @property
+    def size_of(self) -> int:
         """
-        **clear_cache**
+        **size_of**
+            returns the present size of cache
+        """
+        return self.app_cache.__sizeof__()
+
+    def delete_cache_item(self, func: Callable, kwargs: dict) -> None:
+        """
+        **deletes a specific cached item**
             clears present cache
         """
         self.app_cache.delete_memoized(f=func, kwargs=kwargs)
