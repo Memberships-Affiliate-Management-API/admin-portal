@@ -16,7 +16,7 @@ from typing import Optional
 import requests
 from flask import request
 from config import config_instance
-from config.exceptions import UnAuthenticatedError, error_codes
+from backend.src.custom_exceptions.exceptions import UnAuthenticatedError, error_codes
 import functools
 from main import app_cache
 

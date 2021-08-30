@@ -3,7 +3,7 @@ from flask_caching import Cache
 from config import config_instance
 from authlib.integrations.flask_client import OAuth
 # TODO: consider upgrading the cache service from version 2 of this api
-from utils import clear_cache, is_development
+from backend.src.utils.utils import clear_cache
 
 app_cache: Cache = Cache(config=config_instance.cache_dict())
 
@@ -31,7 +31,7 @@ def create_app(config_class=config_instance):
     app_cache.init_app(app=app, config=config_class.cache_dict())
     oauth.init_app(app=app, cache=app_cache)
     # user facing or public facing api's
-    from handlers.routes import default_handlers_bp
+    from backend.src.default_handlers.routes import default_handlers_bp
 
     # importing admin app blueprints
     from main.app.admin.routes.dashboard import admin_dashboard_bp

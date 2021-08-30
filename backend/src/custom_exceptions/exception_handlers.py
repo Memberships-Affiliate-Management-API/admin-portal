@@ -12,7 +12,7 @@ __github_profile__ = "https://github.com/freelancing-solutions/"
 import functools
 from google.api_core.exceptions import Aborted, RetryError
 from google.cloud.ndb.exceptions import BadRequestError, BadQueryError
-from config.exceptions import InputError, RequestError, DataServiceError, status_codes, error_codes
+from backend.src.custom_exceptions.exceptions import InputError, RequestError, DataServiceError, status_codes, error_codes
 from flask import current_app
 
 

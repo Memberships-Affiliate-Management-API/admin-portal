@@ -11,11 +11,10 @@ __github_profile__ = "https://github.com/freelancing-solutions/"
 
 import asyncio
 from typing import Optional, List
-from _cron.scheduler import schedule_func
+from backend.src.scheduler.scheduler import schedule_func
 import aiohttp
-
 from main import app_cache
-from utils import timestamp, create_id, return_ttl
+from backend.src.utils import timestamp, create_id, return_ttl
 
 
 class APIRequests:

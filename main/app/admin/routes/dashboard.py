@@ -1,7 +1,7 @@
 from typing import Optional
 from flask import Blueprint, render_template, url_for, get_flashed_messages, redirect, flash
-from config.exceptions import status_codes
-from security.users_authenticator import logged_user, is_app_admin
+from backend.src.custom_exceptions.exceptions import status_codes
+from backend.src.security.users_authenticator import logged_user, is_app_admin
 
 
 admin_dashboard_bp = Blueprint("admin_dashboard", __name__)

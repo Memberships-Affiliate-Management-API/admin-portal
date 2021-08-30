@@ -1,6 +1,6 @@
 from typing import Optional
-from flask import Blueprint, render_template, url_for, get_flashed_messages
-from security.users_authenticator import handle_users_auth
+from flask import Blueprint, render_template, get_flashed_messages
+from backend.src.security.users_authenticator import handle_users_auth
 
 
 admin_bp = Blueprint("admin_home", __name__)

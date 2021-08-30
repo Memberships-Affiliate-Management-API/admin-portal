@@ -12,8 +12,8 @@ from authlib.integrations.base_client import OAuthError
 from flask import Blueprint, jsonify
 from werkzeug.exceptions import BadRequest, Forbidden, NotFound, MethodNotAllowed, Unauthorized
 from config import config_instance
-from config.exceptions import DataServiceError, InputError, RemoteDataError, error_codes
-from config.exceptions import UnAuthenticatedError, RequestError
+from backend.src.custom_exceptions.exceptions import DataServiceError, InputError, RemoteDataError, error_codes
+from backend.src.custom_exceptions.exceptions import UnAuthenticatedError, RequestError
 
 default_handlers_bp = Blueprint('handlers', __name__)
 

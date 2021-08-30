@@ -9,7 +9,7 @@ import requests
 from flask import current_app, request, redirect, url_for, flash
 from functools import wraps
 from config import config_instance
-from utils import is_development
+from backend.src.utils import is_development
 
 
 # noinspection PyUnusedLocal

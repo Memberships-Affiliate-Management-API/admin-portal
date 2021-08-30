@@ -15,7 +15,7 @@ from main import create_app
 from config import config_instance
 from google.cloud import ndb
 from google.oauth2 import service_account
-from utils.utils import is_development, is_heroku
+from backend.src.utils import is_development, is_heroku
 import os
 
 if is_development():
