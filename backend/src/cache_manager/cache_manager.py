@@ -18,6 +18,7 @@ from config import config_instance
 class CacheManager:
 
     def __init__(self) -> None:
+        self.total_cache_calls: int = 0
         self.app_cache: Cache = Cache()
 
     def init_app(self, app, config):
@@ -25,6 +26,7 @@ class CacheManager:
 
     @property
     def cache(self) -> Cache:
+        self.total_cache_calls += 1
         return self.app_cache
 
     @property
