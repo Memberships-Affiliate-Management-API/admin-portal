@@ -13,6 +13,7 @@ self.addEventListener('load', async e => {
         const response = await do_login(email, password)
         /** NOTE: flask app will automatically redirect user and display the login successfull message on success**/
         document.getElementById('message').innerHTML = `${response.message}`
+        //TODO - update user details and also update token
     })
 })
 
@@ -31,7 +32,6 @@ async function do_login(email, password){
         const url = '/api/v1/user/login'
         const request = new Request(url, request_par)
         const response = await fetch(request)
-        console.log(response)
         return await response.json()
     }
     document.getElementById('message').innerHTML='Please enter <code>email</code> and <code>password</code> ' +
