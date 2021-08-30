@@ -9,6 +9,8 @@ __twitter__ = "@blueitserver"
 __github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affiliate-api"
 __github_profile__ = "https://github.com/freelancing-solutions/"
 
+from typing import Callable
+
 from flask_caching import Cache
 from config import config_instance
 
@@ -24,6 +26,13 @@ class CacheManager:
     @property
     def cache(self) -> Cache:
         return self.app_cache
+
+    def clear_cache(self, func: Callable, kwargs: dict) -> bool:
+        """
+        **clear_cache**
+            clears present cache
+        """
+        self.app_cache.delete_memoized(f=func, kwargs=kwargs)
 
 
 cache_man = CacheManager()
