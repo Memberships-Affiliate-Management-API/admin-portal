@@ -15,7 +15,7 @@ import aiohttp
 
 from backend.src.custom_exceptions.exceptions import EnvironNotSet
 from backend.src.scheduler.scheduler import schedule_func
-from backend.src.cache_manager.cache_manager import app_cache
+from backend.src.cache_manager.cache_manager import cache_man
 from backend.src.utils import timestamp, create_id, return_ttl
 
 
@@ -91,7 +91,7 @@ class APIRequests:
         # returning the _request_id so it can be used to retrieve the results at a later stage
         return _request_id
 
-    @app_cache.memoize(timeout=return_ttl('short'), cache_none=False)
+    @cache_man.cache.memoize(timeout=return_ttl('short'), cache_none=False)
     def get_response(self, request_id: str) -> Optional[dict]:
         """
         **get_response**
