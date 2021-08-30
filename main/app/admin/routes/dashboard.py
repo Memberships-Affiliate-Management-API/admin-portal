@@ -17,11 +17,11 @@ def admin_dashboard(current_user: Optional[dict]) -> tuple:
     :return:
     """
     get_flashed_messages()
-    if is_app_admin(current_user=current_user):
-        return render_template('admin/dashboard.html', current_user=current_user), status_codes.status_ok_code
+    if not is_app_admin(current_user=current_user):
+        flash('This area is not for public use sorry')
+        return redirect(url_for('admin_home.admin_home'))
 
-    flash('This area is not for public use sorry')
-    return redirect(url_for('memberships_main.memberships_main_routes', path='login'))
+    return render_template('admin/dashboard.html', current_user=current_user), status_codes.status_ok_code
 
 
 # noinspection PyTypeChecker
@@ -39,7 +39,7 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
 
     get_flashed_messages()
 
-    if is_app_admin(current_user=current_user):
+    if not is_app_admin(current_user=current_user):
         flash('This area is not for public use sorry')
         return redirect(url_for('admin_home.admin_home'))
 
