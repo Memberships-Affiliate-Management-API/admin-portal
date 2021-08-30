@@ -24,6 +24,7 @@ class Config:
     # TODO - Clean up configuration settings
     def __init__(self) -> None:
         self.BASE_URL: str = os.environ.get("BASE_URL") or config("BASE_URL")
+        self.ADMIN_APP_BASEURL: str = os.environ.get("ADMIN_APP_BASEURL") or config("ADMIN_APP_BASEURL")
         self.MAILGUN_DOMAIN: str = os.environ.get("MAILGUN_DOMAIN") or config("MAILGUN_DOMAIN")
         self.MAILGUN_API_KEY: str = os.environ.get("MAILGUN_API_KEY") or config("MAILGUN_API_KEY")
         self.MAILGUN_NO_RESPONSE: str = os.environ.get("MAILGUN_NO_RESPONSE") or config("MAILGUN_NO_RESPONSE")
@@ -80,7 +81,7 @@ class Config:
             self.EXPLAIN_TEMPLATE_LOADING: bool = False
             self.PREFERRED_URL_SCHEME: str = "http"
             self.TESTING: bool = True
-            self.BASE_URL = 'http://localhost:8081/'
+            self.BASE_URL = 'http://localhost:8082'
             self.ADMIN_APP_BASEURL = 'http://localhost:8081/'
             self.CLIENT_APP_BASEURL = 'http://localhost:8081/'
             # TODO - set Cache to MEM_CACHE and then setup the server URI, applicable on version 2

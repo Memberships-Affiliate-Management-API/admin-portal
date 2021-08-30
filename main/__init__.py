@@ -2,11 +2,10 @@ from flask import Flask
 from backend.src.admin_requests import api_requests
 from config import config_instance
 from authlib.integrations.flask_client import OAuth
-from backend.src.admin_requests.api_requests import APIRequests
+from backend.src.admin_requests.api_requests import app_requests
 from backend.src.cache_manager.cache_manager import cache_man
 
 
-api_requests_data: APIRequests = APIRequests()
 # github authenticate - enables developers to easily sign-up to our api
 oauth = OAuth()
 github_authorize = oauth.register(
@@ -26,10 +25,13 @@ def create_app(config_class=config_instance):
     app = Flask(__name__, static_folder="app/resources/static", template_folder="app/resources/templates")
     app.config.from_object(config_class)
 
+    # custom cache manager
     cache_man.init_app(app=app, config=config_class.cache_dict())
-    oauth.init_app(app=app, cache=cache_man.cache)
+    # custom asynchronous api request handler
+    app_requests.init_app(app=app)
 
-    api_requests_data.init_app(app=app)
+    # github auth handler
+    oauth.init_app(app=app, cache=cache_man.cache)
 
     # user facing or public facing api's
     from backend.src.handlers.routes import default_handlers_bp
@@ -37,10 +39,14 @@ def create_app(config_class=config_instance):
     # importing admin app blueprints
     from main.app.admin.routes.dashboard import admin_dashboard_bp
     from main.app.admin.routes.home import admin_bp
+    from main.app.admin.api.routes import user_api_bp
 
     # admin app handlers
     app.register_blueprint(admin_dashboard_bp)
     app.register_blueprint(admin_bp)
+
+    # admin api
+    app.register_blueprint(user_api_bp)
 
     # Error Handlers
     app.register_blueprint(default_handlers_bp)
