@@ -77,9 +77,12 @@
         <script src="{{ url_for('static', filename='plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
         <!-- AdminLTE App -->
         <script src="{{ url_for('static', filename='js/adminlte.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/demo.js') }}"></script>
-    </body>
-{% block user_scripts %}
+        <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
-{% endblock user_scripts %}
+
+        {% block user_scripts %}
+            <!-- page scripts included here-->
+        {% endblock user_scripts %}
+
+    </body>
 </html>
