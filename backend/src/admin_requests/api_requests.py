@@ -36,19 +36,18 @@ class APIRequests:
         """
         self._base_url: Optional[str] = None
         self._secret_key: Optional[str] = None
-        self._responses_queue: Optional[List[dict]] = None
+        self._responses_queue: List[Optional[dict]] = []
         self._event_loop = None
 
     def init_app(self, app):
-        self._base_url: str = app.config.get('BASE_URL')
+        self._base_url: str = app.config.get('ADMIN_APP_BASEURL')
         self._secret_key: str = app.config.get('SECRET_KEY')
 
     @staticmethod
     async def _async_request(_url, json_data, headers) -> Optional[dict]:
         async with aiohttp.ClientSession() as session:
             async with session.post(url=_url, json=json_data, headers=headers) as response:
-                json_data: dict = await response.json()
-                return json_data.get('payload') if json_data.get('status') else None
+                return await response.json()
 
     def _request(self, _url: str, json_data: dict, headers: dict) -> None:
         """
@@ -59,8 +58,10 @@ class APIRequests:
         """
         # obtain the _request_id to be used as an identifier for this request
         _request_id: str = headers.get('_request_id')
+        print("sending request: ", _request_id)
         response = asyncio.run(self._async_request(_url=_url, json_data=json_data, headers=headers))
         # compiling a response dict to contain the _request_id and the returned results of the request
+        print("request sent response is : ", response)
         self._responses_queue.append(dict(_request_id=_request_id, response=response))
 
     def schedule_data_send(self, _endpoint: Optional[str], body: Optional[dict] = None) -> str:
@@ -99,11 +100,16 @@ class APIRequests:
             as a result of caching a request can be obtained multiple times from response _queue as it would be cached
         :return: dict -> containing response or None - None wont be cached
         """
-        if isinstance(self._responses_queue, list) and len(self._responses_queue):
+        if isinstance(self._responses_queue, list) and len(self._responses_queue) > 0:
             # at Best will return None if response not found
-            return [_response.get('response') for _response in self._responses_queue
-                    if _response.get('_request_id') == request_id][0] or None
+            try:
+                return [_response.get('response') for _response in self._responses_queue
+                        if _response.get('_request_id') == request_id][0] or None
+            except IndexError as e:
+                pass
+
         # Note: None results will not be cached
+        print('failed to get response : ', request_id)
         return None
 
 
