@@ -12,8 +12,16 @@ self.addEventListener('load', async e => {
         const password = document.getElementById('password').value
         const response = await do_login(email, password)
         /** NOTE: flask app will automatically redirect user and display the login successfull message on success**/
+        console.log(response)
         document.getElementById('message').innerHTML = `${response.message}`
         //TODO - update user details and also update token
+        try{
+            /* TODO- send message to clear service worker caches */
+            localStorage.removeItem('x-access-token');
+            localStorage.setItem('x-access-token', response['payload']['token'])
+        }catch(err){
+            localStorage.setItem('x-access-token', response['payload']['token'])
+        }
     })
 })
 
