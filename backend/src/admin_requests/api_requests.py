@@ -105,7 +105,8 @@ class APIRequests:
             try:
                 return [_response.get('response') for _response in self._responses_queue
                         if _response.get('_request_id') == request_id][0] or None
-            except IndexError as e:
+            except IndexError:
+                # continue as there is nothing to do
                 pass
 
         # Note: None results will not be cached
