@@ -1,5 +1,5 @@
 from typing import Optional
-from flask import Blueprint, render_template, get_flashed_messages, make_response
+from flask import Blueprint, render_template, get_flashed_messages, make_response, url_for
 
 from backend.src.custom_exceptions.exceptions import status_codes
 from backend.src.security.users_authenticator import handle_users_auth, is_app_admin, logged_user
@@ -29,7 +29,8 @@ def default_routes(path: str) -> tuple:
     :return:
     """
     if path == 'robots.txt':
-        response = make_response('admin/robots.txt')
+        _host_url: str = url_for('admin_home.default_routes', path='sitemap.xml', _external=True)
+        response = make_response(render_template('admin/robots.txt', host_url=_host_url))
         response.headers['content-type'] = 'text/plain'
         return response, status_codes.status_ok_code
 

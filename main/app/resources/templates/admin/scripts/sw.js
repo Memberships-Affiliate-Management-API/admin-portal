@@ -16,10 +16,10 @@
 
 const OFFLINE_VERSION = 1;
 const CACHE_NAME = 'freelancing-profile';
-const website_base_url = 'http://localhost';
+const website_base_url = 'http://localhost:8082';
 // Customize this with a different URL if needed.
 
-// TODO- use Flask Assets to bundle some of the adminLTE css files and js files togather,
+// TODO- use Flask Assets to bundle some of the adminLTE css files and js files together,
 // TODO- also bundle adminLTE Files with flask bundler...
 
 //language-reference-jinja
