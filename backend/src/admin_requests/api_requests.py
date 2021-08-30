@@ -11,9 +11,11 @@ __github_profile__ = "https://github.com/freelancing-solutions/"
 
 import asyncio
 from typing import Optional, List
-from backend.src.scheduler.scheduler import schedule_func
 import aiohttp
-from main import app_cache
+
+from backend.src.custom_exceptions.exceptions import EnvironNotSet
+from backend.src.scheduler.scheduler import schedule_func
+from backend.src.cache_manager.cache_manager import app_cache
 from backend.src.utils import timestamp, create_id, return_ttl
 
 
@@ -28,15 +30,18 @@ class APIRequests:
         using the _request_id
     """
 
-    def __init__(self, app):
+    def __init__(self):
         """
-
-        :param app:
+        **initializing requests**
         """
-        self._base_url: str = app.config.get('BASE_URL')
-        self._secret_key: str = app.config.get('SECRET_KEY')
+        self._base_url: Optional[str] = None
+        self._secret_key: Optional[str] = None
         self._responses_queue: Optional[List[dict]] = None
         self._event_loop = None
+
+    def init_app(self, app):
+        self._base_url: str = app.config.get('BASE_URL')
+        self._secret_key: str = app.config.get('SECRET_KEY')
 
     @staticmethod
     async def _async_request(_url, json_data, headers) -> Optional[dict]:
@@ -68,6 +73,9 @@ class APIRequests:
         :param body:
         :return: str -> request_id
         """
+        if not self._base_url:
+            raise EnvironNotSet()
+
         _url: str = f'{self._base_url}{_endpoint}'
         if isinstance(body, dict):
             body.update(SECRET_KEY=self._secret_key)
