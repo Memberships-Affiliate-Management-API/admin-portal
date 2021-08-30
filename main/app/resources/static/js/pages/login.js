@@ -28,7 +28,7 @@ async function do_login(email, password){
             credentials: 'same-origin',
             cache: 'no-cache'
         }
-        const url = '/api/v1/main/auth/login'
+        const url = '/api/v1/user/login'
         const request = new Request(url, request_par)
         const response = await fetch(request)
         return await response.json()

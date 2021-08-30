@@ -39,13 +39,7 @@ def get_admin_user() -> dict:
 
         :return: dict
     """
-    if is_development():
-        admin_email, cell, names, organization_id, password, surname, uid = get_config_admin_user_details()
-    else:
-        return get_admin_user_from_admin_api()
-
-    return dict(uid=uid, organization_id=organization_id, email=admin_email, names=names, surname=surname,
-                cell=cell, password=password, is_admin=True)
+    return get_admin_user_from_admin_api()
 
 
 def get_admin_user_from_admin_api() -> Optional[dict]:
@@ -56,7 +50,7 @@ def get_admin_user_from_admin_api() -> Optional[dict]:
     :return: dict -> as user
     """
     _endpoint: str = '_api/v1/admin/users/get'
-    _base_url: str = config_instance.BASE_URL
+    _base_url: str = config_instance.ADMIN_APP_BASEURL
     _url: str = f'{_base_url}{_endpoint}'
     _secret_key: str = config_instance.SECRET_KEY
     _auth_token: str = encode_auth_token(uid=_secret_key)
@@ -91,7 +85,7 @@ def get_config_admin_user_details() -> tuple:
     return admin_email, cell, names, organization_id, password, surname, uid
 
 
-def is_app_admin(current_user: any) -> bool:
+def is_app_admin(current_user: any) -> Optional[bool]:
     """
         **is_app_admin**
             checks if user is app admin - meaning admin for main organization for the API
@@ -99,9 +93,13 @@ def is_app_admin(current_user: any) -> bool:
     :param current_user:
     :return: boolean indicating if current user is admin or not
     """
+    if current_user is None:
+        return None
+
     if isinstance(current_user, dict):
         return current_user and current_user.get('uid') and (current_user.get('organization_id') == config_instance.ORGANIZATION_ID)
 
+    # noinspection PyUnresolvedReferences
     return current_user and current_user.uid and (current_user.organization_id == config_instance.ORGANIZATION_ID)
 
 
@@ -155,9 +153,11 @@ def send_get_user_request(uid: str) -> Optional[dict]:
         :param uid:
         :return: dict -> user record
     """
-    _base_url: str = os.environ.get("BASE_URL")
-    _user_endpoint: str = "_api/v1/client/users/get-user"
-    response = requests.post(url=f"{_base_url}{_user_endpoint}", json=dict(uid=uid))
+    # admin api base url
+    _base_url: str = os.environ.get("ADMIN_APP_BASEURL")
+    _user_endpoint: str = "_api/v1/admin/users/get"
+    _data: dict = dict(uid=uid, SECRET_KEY=config_instance.SECRET_KEY)
+    response = requests.post(url=f"{_base_url}{_user_endpoint}", json=_data)
     response_data: dict = response.json()
     if response_data['status']:
         return response_data['payload']
@@ -181,20 +181,19 @@ def handle_users_auth(func):
             :param kwargs:
             :return:
         """
-        if is_development():
-            current_user: Optional[dict] = get_admin_user()
-            return func(current_user, *args, **kwargs)
+        # if is_development():
+        #     current_user: Optional[dict] = get_admin_user()
+        #     return func(current_user, *args, **kwargs)
 
         token: Optional[str] = None
         # print('token headers: {}'.format(request.headers))
         if 'x-access-token' in request.headers:
             token = request.headers.get('x-access-token')
-            # print('token found : {}'.format(token))
+            print('token found : {}'.format(token))
         # NOTE: if running on development server by-pass authentication and return admin user
         if not token:
-            return redirect(url_for('memberships_main.memberships_main_routes', path='login'))
+            return redirect(url_for('admin_home.admin_home', path='login'))
         try:
-
             uid: Optional[str] = decode_auth_token(auth_token=token)
             if bool(uid):
                 # NOTE: using client api to access user details
@@ -232,14 +231,14 @@ def logged_user(func):
     """
     @wraps(func)
     def decorated(*args, **kwargs):
-        current_user: Optional[dict] = 0
+        current_user: Optional[dict] = None
         # NOTE: by passes authentication and returns admin user as authenticated
         # user on development
-        if is_development():
-            # TODO use api here instead of user model
-
-            current_user: Optional[dict] = get_admin_user()
-            return func(current_user, *args, **kwargs)
+        # if is_development():
+        #     # TODO use api here instead of user model
+        #
+        #     current_user: Optional[dict] = get_admin_user()
+        #     return func(current_user, *args, **kwargs)
 
         if 'x-access-token' in request.headers:
             token: Optional[str] = request.headers['x-access-token']
