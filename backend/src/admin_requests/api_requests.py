@@ -105,3 +105,6 @@ class APIRequests:
                     if _response.get('_request_id') == request_id][0] or None
         # Note: None results will not be cached
         return None
+
+
+app_requests: APIRequests = APIRequests()

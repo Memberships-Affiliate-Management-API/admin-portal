@@ -18,10 +18,10 @@ from flask import request
 from config import config_instance
 from backend.src.custom_exceptions.exceptions import UnAuthenticatedError, error_codes
 import functools
-from main import app_cache
+from backend.src.cache_manager.cache_manager import cache_man
 
 
-@app_cache.memoize(timeout=16*60)
+@cache_man.cache.memoize(timeout=16*60)
 def is_app_authenticated(domain: str, secret_key: str, auth_token: str) -> bool:
     """
         **apps_authenticator**
