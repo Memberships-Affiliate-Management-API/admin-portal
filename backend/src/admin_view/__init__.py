@@ -1,11 +1,11 @@
 from backend.src.admin_requests.api_requests import app_requests
 from config import config_instance
-
+from time import sleep
 
 class AdminView:
 
     def __init__(self):
-        self._login_endpoint: str = '_api/v1/admin/users/login'
+        self._login_endpoint: str = '_api/v1/admin/auth/login'
         self._uid: str = config_instance.ADMIN_UID
         self._email: str = config_instance.ADMIN_EMAIL
         self._organization_id: str = config_instance.ORGANIZATION_ID
@@ -17,7 +17,10 @@ class AdminView:
         """
         _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, email=email, password=password)
         _request_id = app_requests.schedule_data_send(_endpoint=self._login_endpoint, body=_kwargs)
+        print('sending login request with id_: ', _request_id)
         while True:
             response = app_requests.get_response(request_id=_request_id)
             if response is not None:
                 return response
+            sleep(1)
+

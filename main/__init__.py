@@ -4,7 +4,7 @@ from config import config_instance
 from authlib.integrations.flask_client import OAuth
 from backend.src.admin_requests.api_requests import app_requests
 from backend.src.cache_manager.cache_manager import cache_man
-
+from backend.src.scheduler.scheduler import task_scheduler
 
 # github authenticate - enables developers to easily sign-up to our api
 oauth = OAuth()
@@ -50,5 +50,7 @@ def create_app(config_class=config_instance):
 
     # Error Handlers
     app.register_blueprint(default_handlers_bp)
+
+    task_scheduler.start()
 
     return app
