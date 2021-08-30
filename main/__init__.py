@@ -2,10 +2,8 @@ from flask import Flask
 from backend.src.admin_requests import api_requests
 from config import config_instance
 from authlib.integrations.flask_client import OAuth
-# TODO: consider upgrading the cache service from version 2 of this api
-from backend.src.utils.utils import clear_cache
 from backend.src.admin_requests.api_requests import APIRequests
-from backend.src.cache_manager.cache_manager import app_cache
+from backend.src.cache_manager.cache_manager import cache_man
 
 
 api_requests_data: APIRequests = APIRequests()
@@ -28,8 +26,8 @@ def create_app(config_class=config_instance):
     app = Flask(__name__, static_folder="app/resources/static", template_folder="app/resources/templates")
     app.config.from_object(config_class)
 
-    app_cache.init_app(app=app, config=config_class.cache_dict())
-    oauth.init_app(app=app, cache=app_cache)
+    cache_man.init_app(app=app, config=config_class.cache_dict())
+    oauth.init_app(app=app, cache=cache_man.cache)
 
     api_requests_data.init_app(app=app)
 
@@ -46,9 +44,5 @@ def create_app(config_class=config_instance):
 
     # Error Handlers
     app.register_blueprint(default_handlers_bp)
-
-    # Clear Cache
-    if clear_cache(app=app, cache=app_cache):
-        print("Cache Cleared and Starting")
 
     return app
