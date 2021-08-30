@@ -198,7 +198,7 @@ class RemoteDataError(IOError):
         return self.__str__()
 
 
-class EnvironNotSet(Exception):
+class EnvironNotSet(EnvironmentError):
     """
         raised when environment variables are not set
     """
