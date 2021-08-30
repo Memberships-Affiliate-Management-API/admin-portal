@@ -31,6 +31,7 @@ async function do_login(email, password){
         const url = '/api/v1/user/login'
         const request = new Request(url, request_par)
         const response = await fetch(request)
+        console.log(response)
         return await response.json()
     }
     document.getElementById('message').innerHTML='Please enter <code>email</code> and <code>password</code> ' +

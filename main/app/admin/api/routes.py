@@ -18,7 +18,7 @@ def users_api(path: str) -> tuple:
         password: str = json_data.get('password')
         print(email, password)
         response = admin_view.login_user(email=email, password=password)
+        print(response)
 
-        return jsonify({'status': True, 'payload': admin_view.login_user(email=email, password=password),
-                        'message': 'successfully logged in'}), status_codes.status_ok_code
+        return jsonify(response), status_codes.status_ok_code
 

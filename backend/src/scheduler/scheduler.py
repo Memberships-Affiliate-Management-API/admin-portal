@@ -26,6 +26,7 @@ def schedule_func(func: Callable, kwargs: dict) -> None:
     :param kwargs:
     :return: None
     """
-    twenty_seconds_after = datetime.now() + timedelta(seconds=30)
+    twenty_seconds_after = datetime.now() + timedelta(seconds=5)
     task_scheduler.add_job(func=func, trigger='date', run_date=twenty_seconds_after, kwargs=kwargs, id=create_unique_id(),
                            name="schedule_func", misfire_grace_time=360)
+    print("job scheduled to : ", func)
