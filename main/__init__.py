@@ -1,5 +1,4 @@
 from flask import Flask
-from backend.src.admin_requests import api_requests
 from config import config_instance
 from authlib.integrations.flask_client import OAuth
 from backend.src.admin_requests.api_requests import app_requests
@@ -38,12 +37,15 @@ def create_app(config_class=config_instance):
 
     # importing admin app blueprints
     from main.app.admin.routes.dashboard import admin_dashboard_bp
+
     from main.app.admin.routes.home import admin_bp
-    from main.app.admin.api.routes import user_api_bp
+    from main.app.admin.api.admin.routes import admin_api_bp
+    from main.app.admin.api.users.routes import user_api_bp
 
     # admin app handlers
-    app.register_blueprint(admin_dashboard_bp)
+    app.register_blueprint(admin_api_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(admin_dashboard_bp)
 
     # admin api
     app.register_blueprint(user_api_bp)

@@ -40,7 +40,7 @@ class APIRequests:
         self._event_loop = None
 
     def init_app(self, app):
-        self._base_url: str = app.config.get('ADMIN_APP_BASEURL')
+        self._base_url: str = app.config.get('BASE_URL')
         self._secret_key: str = app.config.get('SECRET_KEY')
 
     @staticmethod
