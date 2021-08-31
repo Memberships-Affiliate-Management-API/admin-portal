@@ -37,7 +37,7 @@ class AdminView:
             will return login token
         """
         _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, email=email, password=password)
-        _request_id: str= app_requests.schedule_data_send(_endpoint=self._login_endpoint, body=_kwargs)
+        _request_id: str = app_requests.schedule_data_send(_endpoint=self._login_endpoint, body=_kwargs)
         while True:
             response = app_requests.get_response(request_id=_request_id)
             if response is not None:
