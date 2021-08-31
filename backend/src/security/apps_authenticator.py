@@ -41,6 +41,7 @@ class APPAuthenticator:
         """
         **authenticate_with_admin_api**
         """
+        self.refresh_app_id()
         _kwargs: dict = dict(app_id=self._app_id, domain=self._app_domain, secret_key=self._secret_key)
         _request_id: str = app_requests.schedule_data_send(_endpoint=self._micro_services_auth, body=_kwargs)
         response: Optional[dict] = None
@@ -53,8 +54,6 @@ class APPAuthenticator:
 
         if isinstance(response, dict) and response.get('status') is True:
             self.auth_token = response['payload']['auth_token']
-        else:
-            self.refresh_app_id()
 
 
 app_auth_micro_service: APPAuthenticator = APPAuthenticator()

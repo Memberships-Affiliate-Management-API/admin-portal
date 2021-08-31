@@ -1,4 +1,6 @@
 from flask import Flask
+
+from backend.src.custom_exceptions.exceptions import UnAuthenticatedError
 from backend.src.security.apps_authenticator import app_auth_micro_service
 from backend.src.utils import is_development
 from config import config_instance
@@ -61,6 +63,6 @@ def create_app(config_class=config_instance):
     task_scheduler.start()
     app_auth_micro_service.authenticate_with_admin_api()
     # TODO - will do setup on first run of api backend
-    if app_auth_micro_service.auth_token or is_development():
+    if bool(app_auth_micro_service.auth_token) or is_development():
         return app
-    return None
+    raise UnAuthenticatedError()
