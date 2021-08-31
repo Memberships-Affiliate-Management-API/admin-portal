@@ -1,18 +1,24 @@
 """
     handle users and admin authentication
 """
+__developer__ = "mobius-crypt"
+__email__ = "mobiusndou@gmail.com"
+__twitter__ = "@blueitserver"
+__github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affiliate-api"
+__github_profile__ = "https://github.com/freelancing-solutions/"
+__licence__ = "MIT"
 
 import datetime
-import os
+from functools import wraps
 from typing import Optional
+
 import jwt
 import requests
 from flask import current_app, request, redirect, url_for, flash
-from functools import wraps
 
 from backend.src.cache_manager.cache_manager import cache_man
+from backend.src.utils import return_ttl
 from config import config_instance
-from backend.src.utils import is_development, return_ttl
 
 
 class AdminAuth:
