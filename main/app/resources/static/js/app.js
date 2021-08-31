@@ -1,10 +1,6 @@
 
 self.addEventListener('load', () => {
-    console.log("loaded app")
-
     let token_sent = false;
-    let incoming_notifications_messages = [];
-
     // Dispatch messages to service worker
     let send_auth_to_service_worker = async (message )=> {
         navigator.serviceWorker.ready.then(registration => {
@@ -94,9 +90,9 @@ self.addEventListener('load', () => {
         return registered;
     }
 
-    self.addEventListener('message', e => {
-        console.log('Message sent from somewhere else',e);
-    })
+    // self.addEventListener('message', e => {
+    //     console.log('Message sent from somewhere else',e);
+    // })
 
     // initialize login on first load
     let init_auth_token_send = async function(){
@@ -109,24 +105,6 @@ self.addEventListener('load', () => {
         }
         return true;
     };
-
-    let unique_visitor_send = async function(){
-        await dispatch_messages({
-            type: 'user-messages',status: 'count-unique',
-        })
-        return true;
-    }
-    let return_visitor_send = async function(){
-        await dispatch_messages({
-            type: 'user-messages',status: 'count-return',
-        })
-        return true;
-    }
-    let page_view_send = async function(){
-        await dispatch_messages({
-            type: 'user-messages', status: 'page-view'
-        })
-    }
 
     // ************************************************************************************//
     //  Notification Services
@@ -146,3 +124,32 @@ self.addEventListener('load', () => {
         }
     });
 })
+
+
+let sidebar_menu_handler = async (_endpoint)=> {
+
+    let base_url = document.location.origin
+    let request_uri = `${base_url}${_endpoint}`
+        //Initializing headers for a post request
+        let new_headers;
+        let auth_token = localStorage.getItem('x-access-token');
+        if (auth_token && (auth_token !== "undefined") && (auth_token !== "")){
+            new_headers = new Headers({ 'content-type': 'application/json','x-access-token': auth_token})
+        }else{
+            new_headers = new Headers({ 'content-type': 'application/json'})
+        }
+
+    const init_post = {
+        method: 'POST',
+        headers: new_headers,
+        body: JSON.stringify({auth_token}),
+        mode: 'cors',
+        credentials: 'same-origin',
+        cache: 'no-cache'
+    }
+
+    let request = new Request(request_uri, init_post)
+    let response = await fetch(request)
+    // console.log(await response.text())
+    document.getElementById('content').innerHTML = await response.text()
+}
