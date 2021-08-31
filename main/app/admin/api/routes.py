@@ -10,15 +10,11 @@ def users_api(path: str) -> tuple:
     """
 
     """
-    print('user api : ', path)
     admin_view: AdminView = AdminView()
     if path == 'login':
         json_data: dict = request.get_json()
         email: str = json_data.get('email')
         password: str = json_data.get('password')
-        print(email, password)
         response = admin_view.login_user(email=email, password=password)
-        print(response)
-
         return jsonify(response), status_codes.status_ok_code
 
