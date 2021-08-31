@@ -151,7 +151,7 @@ self.addEventListener('fetch', (event) => {
           // if its a GET request to another domain fetch a fresh copy
           // if its service worker request fetch a fresh copy
           if ((event.request.method === "GET") && (!request_url.includes(website_base_url))){
-            return event.respondWith( (async () => {return  await handle_auth_headers(event)})())
+            return event.respondWith( (async () => await fetch(event.request))())
           }
           // all other requests fetch securely from backend
           return event.respondWith((async () => {return  await handle_auth_headers(event)})())
