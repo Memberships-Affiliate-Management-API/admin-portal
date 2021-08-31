@@ -156,15 +156,6 @@ class AdminAuth:
         # noinspection PyBroadException
         @wraps(func)
         def decorated(*args, **kwargs):
-            """
-                decorated
-                :param args:
-                :param kwargs:
-                :return:
-            """
-            # if is_development():
-            #     current_user: Optional[dict] = get_admin_user()
-            #     return func(current_user, *args, **kwargs)
 
             token: Optional[str] = None
             # print('token headers: {}'.format(request.headers))
