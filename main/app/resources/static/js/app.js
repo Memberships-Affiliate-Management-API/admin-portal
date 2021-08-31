@@ -152,7 +152,6 @@ let sidebar_menu_handler = async (_endpoint)=> {
     // console.log(await response.text())
     const selector = _endpoint.split("/")[4]
     const handle_bars_dom = load_dom_resources(selector)
-    console.log(handle_bars_dom)
     const _result = await response.json()
     document.getElementById('content').innerHTML = process_dom(handle_bars_dom, _result)
 }
@@ -161,7 +160,12 @@ function process_dom(handle_bars_dom, _result){
     /**
      * Given a handle bars template populate it with results
      */
-    return handle_bars_dom
+    let handle_bars_template = Handlebars.compile(handle_bars_dom)
+    return handle_bars_template({
+        message: _result['message'],
+        payload: _result['payload'],
+        status: _result['status']
+    })
 }
 
 function load_dom_resources(selector){

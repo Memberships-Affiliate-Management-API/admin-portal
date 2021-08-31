@@ -6,7 +6,11 @@ function return_dashboard_dom(){
         </div>
         <div class="card-body">
         
-        </div>            
+        </div>  
+        <div class="card-footer">
+            <p class="card-text">{{ message }}</p>
+        </div>         
+                  
     </div>           
     `
 }
@@ -14,14 +18,16 @@ function return_dashboard_dom(){
 function return_organizations_dom(){
 
     return `
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title"> Organizations </h3>               
-        </div>
-        <div class="card-body">
-        
-        </div>            
-    </div>    
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"> Organizations </h3>               
+            </div>
+            <div class="card-body">            
+            </div>   
+            <div class="card-footer">
+                <p class="card-text">{{ message }}</p>
+            </div>         
+        </div>    
     `
 }
 
@@ -33,7 +39,11 @@ function return_users_dom(){
         </div>
         <div class="card-body">
         
-        </div>            
+        </div>      
+        <div class="card-footer">
+            <p class="card-text">{{ message }}</p>
+        </div>         
+              
     </div>    
     
     `
@@ -47,7 +57,11 @@ function return_api_dom(){
         </div>
         <div class="card-body">
         
-        </div>            
+        </div>          
+        <div class="card-footer">
+            <p class="card-text">{{ message }}</p>
+        </div>         
+          
     </div>    
    
    `
@@ -61,7 +75,11 @@ function return_affiliates_dom(){
         </div>
         <div class="card-body">
         
-        </div>            
+        </div>      
+        <div class="card-footer">
+            <p class="card-text">{{ message }}</p>
+        </div>         
+              
     </div>    
 
     `
@@ -75,7 +93,11 @@ function return_accounts_dom(){
         </div>
         <div class="card-body">
         
-        </div>            
+        </div>           
+        <div class="card-footer">
+            <p class="card-text">{{ message }}</p>
+        </div>         
+         
     </div>    
 
     `
@@ -89,7 +111,11 @@ function return_help_desk_dom(){
         </div>
         <div class="card-body">
         
-        </div>            
+        </div>   
+        <div class="card-footer">
+            <p class="card-text">{{ message }}</p>
+        </div>         
+                 
     </div>    
 
     `
