@@ -4,7 +4,7 @@ from backend.src.admin_view import AdminView
 from backend.src.custom_exceptions.exceptions import status_codes
 from backend.src.security.users_authenticator import admin_auth
 from backend.src.admin_view import AdminView
-
+from backend.src.security.apps_authenticator import app_auth_micro_service
 admin_api_bp = Blueprint('admin_dashboard', __name__)
 
 
@@ -15,14 +15,10 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
     """
 
     """
-    print(f'CURRENT USER DETAILS: {current_user}')
-    print(f'PATH : {path}')
-
     json_data: dict = request.get_json()
-    print(f'JSON Data: {json_data}')
     admin_instance: AdminView = AdminView()
-
-    token: str = json_data.get('token')
+    # NOTE uses app auth token to authenticate the api call
+    token: str = app_auth_micro_service.auth_token
     domain: str = request.headers.get('referrer')
 
     if path == "dashboard":
@@ -35,10 +31,12 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
         return jsonify(payload), status_codes.status_ok_code
 
     elif path == "users":
+        # TODO replace with App Token
         payload: dict = admin_instance.get_main_organization_users(token=token, domain=domain)
         return jsonify(payload), status_codes.status_ok_code
 
     elif path == "api-keys":
+        payload: dict = admin_instance.get_api_keys(token=token, domain=domain)
         return jsonify({'status': True, 'payload': 'api_keys under development',
                         'message': 'under development'}), status_codes.status_ok_code
 
