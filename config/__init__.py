@@ -81,8 +81,8 @@ class Config:
             self.EXPLAIN_TEMPLATE_LOADING: bool = False
             self.PREFERRED_URL_SCHEME: str = "http"
             self.TESTING: bool = True
-            self.BASE_URL = 'http://localhost:8082/'
-            self.ADMIN_APP_BASEURL = 'http://localhost:8081/'
+            self.BASE_URL = 'http://localhost:8081/'
+            self.ADMIN_APP_BASEURL = 'http://localhost:8082/'
             self.CLIENT_APP_BASEURL = 'http://localhost:8083/'
             # TODO - set Cache to MEM_CACHE and then setup the server URI, applicable on version 2
 
