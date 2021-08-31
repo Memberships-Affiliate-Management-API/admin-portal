@@ -19,7 +19,7 @@ def admin_dashboard(current_user: Optional[dict]) -> tuple:
     get_flashed_messages()
     if not admin_auth.is_app_admin(current_user=current_user):
         flash('This area is not for public use sorry')
-        return redirect(url_for('admin_home.admin_home'))
+        return redirect(url_for('admin_home.login'))
 
     return render_template('admin/dashboard.html', current_user=current_user), status_codes.status_ok_code
 
@@ -41,7 +41,7 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
 
     if not admin_auth.is_app_admin(current_user=current_user):
         flash('This area is not for public use sorry')
-        return redirect(url_for('admin_home.admin_home'))
+        return redirect(url_for('admin_home.login'))
 
     if path == "affiliates":
         return render_template('admin/affiliates.html', current_user=current_user), status_codes.status_ok_code

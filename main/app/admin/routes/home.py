@@ -1,5 +1,5 @@
 from typing import Optional
-from flask import Blueprint, render_template, get_flashed_messages, make_response, url_for
+from flask import Blueprint, render_template, get_flashed_messages, make_response, url_for, flash
 
 from backend.src.custom_exceptions.exceptions import status_codes
 from backend.src.security.users_authenticator import admin_auth
@@ -17,6 +17,21 @@ def admin_home(current_user: Optional[dict]) -> tuple:
     """
     get_flashed_messages()
     if admin_auth.is_app_admin(current_user=current_user):
+        return render_template('admin/home.html', current_user=current_user)
+    return render_template('admin/home.html')
+
+
+@admin_bp.route("/login", methods=["GET"])
+@admin_auth.logged_user
+def login(current_user: Optional[dict]) -> tuple:
+    """
+        **admin_home**
+            admin home page
+    :return:
+    """
+    get_flashed_messages()
+    if admin_auth.is_app_admin(current_user=current_user):
+        flash('you are already logged in')
         return render_template('admin/home.html', current_user=current_user)
     return render_template('admin/login.html')
 
@@ -48,4 +63,3 @@ def default_routes(path: str) -> tuple:
         response = make_response(render_template('admin/scripts/sw.js'))
         response.headers['content-type'] = 'application/javascript'
         return response, status_codes.status_ok_code
-
