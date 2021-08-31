@@ -52,9 +52,11 @@ class APPAuthenticator:
 
         if response.get('status') is True:
             self.auth_token = response['payload']['auth_token']
+        else:
+            self.refresh_app_id()
 
 
-app_auth_micro_service: APPAuthenticator =  APPAuthenticator()
+app_auth_micro_service: APPAuthenticator = APPAuthenticator()
 
 
 
