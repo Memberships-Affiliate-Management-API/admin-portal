@@ -1,3 +1,13 @@
+/**
+ * main application for system admin app for membership and affiliate api
+ *
+ *@__author__ = "mobius-crypt"
+ *@__email__ = "mobiusndou@gmail.com"
+ *@__twitter__ = "@blueitserver"
+ *@__github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affiliate-api"
+ *@__github_profile__ = "https://github.com/freelancing-solutions/"
+ *
+ */
 
 self.addEventListener('load', () => {
     let token_sent = false;
