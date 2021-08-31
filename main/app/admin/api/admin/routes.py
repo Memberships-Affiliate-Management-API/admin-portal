@@ -1,10 +1,12 @@
 from typing import Optional
-from flask import Blueprint, request, jsonify, make_response
+
+from flask import Blueprint, request, jsonify
+
 from backend.src.admin_view import AdminView
 from backend.src.custom_exceptions.exceptions import status_codes
-from backend.src.security.users_authenticator import admin_auth
-from backend.src.admin_view import AdminView
 from backend.src.security.apps_authenticator import app_auth_micro_service
+from backend.src.security.users_authenticator import admin_auth
+
 admin_api_bp = Blueprint('admin_dashboard', __name__)
 
 
@@ -20,6 +22,7 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
     # NOTE uses app auth token to authenticate the api call
     token: str = app_auth_micro_service.auth_token
     domain: str = request.headers.get('referrer')
+    # TODO - add user token to current_user and then proceed to use it on the app
 
     if path == "dashboard":
         return jsonify({'status': True, 'payload': 'dashboard under development',
@@ -37,8 +40,7 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
 
     elif path == "api-keys":
         payload: dict = admin_instance.get_api_keys(token=token, domain=domain)
-        return jsonify({'status': True, 'payload': 'api_keys under development',
-                        'message': 'under development'}), status_codes.status_ok_code
+        return jsonify(payload), status_codes.status_ok_code
 
     elif path == "affiliates":
         return jsonify({'status': True, 'payload': 'affiliates under development',
