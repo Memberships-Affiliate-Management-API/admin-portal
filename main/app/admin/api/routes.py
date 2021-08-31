@@ -18,6 +18,17 @@ def users_api(path: str) -> tuple:
         login_response = admin_view.login_user(email=email, password=password)
         response = make_response(jsonify(login_response))
         response.headers['content-type'] = 'application/json'
-        print(request.headers)
         return response, status_codes.status_ok_code
+
+    elif path == "logout":
+        json_data: dict = request.get_json()
+        email: str = json_data.get('email')
+        token: str = json_data.get('token')
+        logout_response: dict = admin_view.logout_user(email=email, token=token)
+        response = make_response(jsonify(logout_response))
+        response.headers['content-type'] = 'application/json'
+        return response, status_codes.status_ok_code
+
+
+
 

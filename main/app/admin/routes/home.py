@@ -18,7 +18,7 @@ def admin_home(current_user: Optional[dict]) -> tuple:
     get_flashed_messages()
     if admin_auth.is_app_admin(current_user=current_user):
         return render_template('admin/home.html', current_user=current_user)
-    return render_template('admin/home.html')
+    return render_template('admin/home.html'), status_codes.status_ok_code
 
 
 @admin_bp.route("/login", methods=["GET"])
@@ -33,7 +33,23 @@ def login(current_user: Optional[dict]) -> tuple:
     if admin_auth.is_app_admin(current_user=current_user):
         flash('you are already logged in')
         return render_template('admin/home.html', current_user=current_user)
-    return render_template('admin/login.html')
+    return render_template('admin/login.html'), status_codes.status_ok_code
+
+
+@admin_bp.route("/logout", methods=["GET"])
+@admin_auth.logged_user
+def logout(current_user: Optional[dict]) -> tuple:
+    """
+        **admin_home**
+            admin home page
+    :return:
+    """
+    get_flashed_messages()
+    if admin_auth.is_app_admin(current_user=current_user):
+        return render_template('admin/logout.html', current_user=current_user)
+
+    flash('you are not logged in')
+    return render_template('admin/login.html'), status_codes.status_ok_code
 
 
 @admin_bp.route("/<string:path>", methods=["GET"])
