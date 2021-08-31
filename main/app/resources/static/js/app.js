@@ -127,7 +127,6 @@ self.addEventListener('load', () => {
 
 
 let sidebar_menu_handler = async (_endpoint)=> {
-
     let base_url = document.location.origin
     let request_uri = `${base_url}${_endpoint}`
         //Initializing headers for a post request
@@ -151,5 +150,42 @@ let sidebar_menu_handler = async (_endpoint)=> {
     let request = new Request(request_uri, init_post)
     let response = await fetch(request)
     // console.log(await response.text())
-    document.getElementById('content').innerHTML = await response.text()
+    const selector = _endpoint.split("/")[4]
+    const handle_bars_dom = load_dom_resources(selector)
+    console.log(handle_bars_dom)
+    const _result = await response.json()
+    document.getElementById('content').innerHTML = process_dom(handle_bars_dom, _result)
+}
+
+function process_dom(handle_bars_dom, _result){
+    /**
+     * Given a handle bars template populate it with results
+     */
+    return handle_bars_dom
+}
+
+function load_dom_resources(selector){
+    /**
+     * Dom Selectors
+     * app.js:159 /_api/admin/dashboard/organizations
+     * app.js:159 /_api/admin/dashboard/api-keys
+     * app.js:159 /_api/admin/dashboard/affiliates
+     * app.js:159 /_api/admin/dashboard/accounts
+     * app.js:159 /_api/admin/dashboard/help-desk
+     * app.js:159 /_api/admin/dashboard/dashboard
+     * app.js:159 /_api/admin/dashboard/users
+     */
+    console.log(selector)
+    let selected_dom = ""
+    switch(selector){
+        case "organizations": selected_dom = return_organizations_dom(); break;
+        case "api-keys": selected_dom = return_api_dom(); break;
+        case "affiliates": selected_dom = return_affiliates_dom(); break;
+        case "accounts": selected_dom = return_accounts_dom(); break;
+        case "help-desk": selected_dom = return_help_desk_dom(); break;
+        case "dashboard": selected_dom = return_dashboard_dom(); break;
+        case "users": selected_dom = return_users_dom(); break;
+        default: selected_dom = return_dashboard_dom(); break;
+    }
+    return selected_dom
 }
