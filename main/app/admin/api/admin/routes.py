@@ -27,7 +27,6 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
             {'status': True, 'payload': 'dashboard under development', 'message': 'under development'}), status_codes.status_ok_code
 
     elif path == "organizations":
-        # TODO request all organizations data
         payload: dict = admin_instance.get_all_organizations()
         print(f"payload : {payload}")
         return jsonify(payload), status_codes.status_ok_code
