@@ -10,7 +10,7 @@ __github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affi
 __github_profile__ = "https://github.com/freelancing-solutions/"
 
 import asyncio
-from typing import Optional, List
+from typing import Optional, List, Callable
 import aiohttp
 
 from backend.src.custom_exceptions.exceptions import EnvironNotSet
@@ -88,7 +88,7 @@ class APIRequests:
         headers.update(_request_id=_request_id)
         _kwargs: dict = dict(_url=_url, json_data=body, headers=headers)
         # Scheduling the request to run later and then continue
-        schedule_func(func=self._request, kwargs=_kwargs)
+        schedule_func(func=self._request, kwargs=_kwargs, delay=1)
         # returning the _request_id so it can be used to retrieve the results at a later stage
         return _request_id
 
@@ -100,7 +100,7 @@ class APIRequests:
             as a result of caching a request can be obtained multiple times from response _queue as it would be cached
         :return: dict -> containing response or None - None wont be cached
         """
-        if isinstance(self._responses_queue, list) and len(self._responses_queue) > 0:
+        if isinstance(self._responses_queue, list) and len(self._responses_queue):
             # at Best will return None if response not found
             try:
                 return [_response.get('response') for _response in self._responses_queue
@@ -110,7 +110,6 @@ class APIRequests:
                 pass
 
         # Note: None results will not be cached
-        print('failed to get response : ', request_id)
         return None
 
 
