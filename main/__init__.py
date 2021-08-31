@@ -1,6 +1,6 @@
 from flask import Flask
-
 from backend.src.security.apps_authenticator import app_auth_micro_service
+from backend.src.utils import is_development
 from config import config_instance
 from authlib.integrations.flask_client import OAuth
 from backend.src.admin_requests.api_requests import app_requests
@@ -46,7 +46,6 @@ def create_app(config_class=config_instance):
 
     from _ipn.microservices import microservices_ipn_bp
 
-
     # admin app handlers
     app.register_blueprint(admin_api_bp)
     app.register_blueprint(admin_bp)
@@ -61,5 +60,7 @@ def create_app(config_class=config_instance):
 
     task_scheduler.start()
     app_auth_micro_service.authenticate_with_admin_api()
-
-    return app
+    # TODO - will do setup on first run of api backend
+    if app_auth_micro_service.auth_token or is_development():
+        return app
+    return None

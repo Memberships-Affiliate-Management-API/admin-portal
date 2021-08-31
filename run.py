@@ -18,6 +18,8 @@ app = create_app(config_class=config_instance)
 
 debug = is_development() and config_instance.DEBUG
 # Press the green button in the gutter to run the script.
+
+
 if __name__ == '__main__':
     if is_development():
         # NOTE: this is a development server
