@@ -6,14 +6,14 @@ __email__ = "mobiusndou@gmail.com"
 __twitter__ = "@blueitserver"
 __github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affiliate-api"
 __github_profile__ = "https://github.com/freelancing-solutions/"
+__licence__ = "MIT"
 
 import hmac
-from typing import Optional
-import requests
+
 from flask import Blueprint, jsonify, request
-from google.cloud import ndb
+
+from backend.src.custom_exceptions.exceptions import status_codes, UnAuthenticatedError
 from config import config_instance
-from backend.src.custom_exceptions.exceptions import status_codes, UnAuthenticatedError, error_codes, DataServiceError
 
 microservices_ipn_bp = Blueprint("microservices_ipn", __name__)
 
