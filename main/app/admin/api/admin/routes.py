@@ -1,3 +1,15 @@
+"""
+    **system admin data routes**
+        this module allows system admin app to get access to data
+"""
+
+__developer__ = "mobius-crypt"
+__email__ = "mobiusndou@gmail.com"
+__twitter__ = "@blueitserver"
+__github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affiliate-api"
+__github_profile__ = "https://github.com/freelancing-solutions/"
+__licence__ = "MIT"
+
 from typing import Optional
 
 from flask import Blueprint, request, jsonify
@@ -56,5 +68,3 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
 
     return jsonify({'status': True, 'payload': 'under development',
                     'message': 'under development'}), status_codes.status_ok_code
-
-
