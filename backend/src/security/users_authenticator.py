@@ -220,7 +220,6 @@ class AdminAuth:
             #     current_user: Optional[dict] = get_admin_user()
             #     return func(current_user, *args, **kwargs)
 
-
             if 'x-access-token' in request.headers:
                 token: Optional[str] = request.headers['x-access-token']
 
@@ -245,7 +244,6 @@ class AdminAuth:
 
 
 admin_auth: AdminAuth = AdminAuth()
-
 
 if __name__ == '__main__':
     """
