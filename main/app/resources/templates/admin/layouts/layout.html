@@ -27,18 +27,7 @@
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" id="content">
                 <!-- Flash Messages -->
-
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="card">
-                                <div class="card-header bg-{{category}}">
-                                    <h3 class="card-title">{{ message }}</h3>
-                                </div>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-        {% endwith %}
+            {% include "admin/layouts/flash_messages.html" %}
             {% block content %}
                 <!-- Page Content Here -->
             {% endblock content %}
