@@ -11,13 +11,14 @@ __github_profile__ = "https://github.com/freelancing-solutions/"
 __licence__ = "MIT"
 
 import asyncio
-from typing import Optional, List, Callable
+from typing import Optional, List
+
 import aiohttp
 
+from backend.src.cache_manager.cache_manager import cache_man
 from backend.src.custom_exceptions.exceptions import EnvironNotSet
 from backend.src.scheduler.scheduler import schedule_func
-from backend.src.cache_manager.cache_manager import cache_man
-from backend.src.utils import timestamp, create_id, return_ttl
+from backend.src.utils import create_id, return_ttl
 
 
 class APIRequests:
