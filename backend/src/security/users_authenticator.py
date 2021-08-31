@@ -8,8 +8,10 @@ import jwt
 import requests
 from flask import current_app, request, redirect, url_for, flash
 from functools import wraps
+
+from backend.src.cache_manager.cache_manager import cache_man
 from config import config_instance
-from backend.src.utils import is_development
+from backend.src.utils import is_development, return_ttl
 
 
 class AdminAuth:
@@ -126,6 +128,7 @@ class AdminAuth:
             return None
 
     @staticmethod
+    @cache_man.app_cache.memoize(timeout=return_ttl('short'))
     def send_get_user_request(uid: str) -> Optional[dict]:
         """
         **send_get_user_request**
@@ -137,10 +140,13 @@ class AdminAuth:
         """
         # admin api base url
         _base_url: str = config_instance.BASE_URL
-        _user_endpoint: str = "_api/v1/admin/users/get"
-        _data: dict = dict(uid=uid, SECRET_KEY=config_instance.SECRET_KEY)
+        _user_endpoint: str = "_api/v1/admin/auth/get-admin-user"
+        _organization_id: str = config_instance.ORGANIZATION_ID
+        print(f'retrieving user from endpoint: {_base_url}{_user_endpoint}')
+        _data: dict = dict(organization_id=_organization_id, uid=uid, SECRET_KEY=config_instance.SECRET_KEY)
         response = requests.post(url=f"{_base_url}{_user_endpoint}", json=_data)
         response_data: dict = response.json()
+        print(f'response from users endpoint: {response_data}')
         if response_data['status']:
             return response_data['payload']
         return None
@@ -210,7 +216,7 @@ class AdminAuth:
             #
             #     current_user: Optional[dict] = get_admin_user()
             #     return func(current_user, *args, **kwargs)
-
+            print(request.headers)
             if 'x-access-token' in request.headers:
                 token: Optional[str] = request.headers['x-access-token']
 
