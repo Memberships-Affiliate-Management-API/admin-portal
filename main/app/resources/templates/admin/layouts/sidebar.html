@@ -1,7 +1,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="{{ url_for('admin_dashboard.admin_dashboard') }}" class="brand-link">
+    <a href="{{ url_for('admin_dashboard_home.admin_dashboard') }}" class="brand-link">
       <img src="{{ url_for('static', filename='img/AdminLTELogo.png') }}" alt="Memberships API" class="brand-image img-circle elevation-3"
            style="opacity: .8">
       <span class="brand-text font-weight-light">Memberships API</span>
@@ -21,11 +21,14 @@
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+            data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <a href="{{ url_for('admin_dashboard.admin_dashboard') }}" class="nav-link">
+            <a href="#"
+               id="{{ url_for('admin_dashboard.admin_dashboard_routes', path='dashboard') }}"
+               class="nav-link" onclick="sidebar_menu_handler(this.id)">
               <i class="nav-icon fas fa-desktop"></i>
               <p>
                 Dashboard
@@ -34,7 +37,10 @@
           </li>
 
           <li class="nav-item">
-            <a href="{{ url_for('admin_dashboard.admin_dashboard_routes', path='organizations') }}" class="nav-link">
+            <a href="#"
+               id="{{ url_for('admin_dashboard.admin_dashboard_routes', path='organizations') }}"
+               class="nav-link"
+               onclick="sidebar_menu_handler(this.id)">
               <i class="nav-icon fas fa-folder"></i>
               <p>
                 Organizations
@@ -42,7 +48,10 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ url_for('admin_dashboard.admin_dashboard_routes', path='users') }}" class="nav-link">
+            <a href="#"
+               id="{{ url_for('admin_dashboard.admin_dashboard_routes', path='users') }}"
+               class="nav-link"
+               onclick="sidebar_menu_handler(this.id)">
               <i class="nav-icon fas fa-user"></i>
               <p>
                 Users
@@ -50,7 +59,10 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ url_for('admin_dashboard.admin_dashboard_routes', path='api-keys') }}" class="nav-link">
+            <a href="#"
+               id="{{ url_for('admin_dashboard.admin_dashboard_routes', path='api-keys') }}"
+               class="nav-link"
+               onclick="sidebar_menu_handler(this.id)">
               <i class="nav-icon fas fa-link"></i>
               <p>
                 API
@@ -58,7 +70,10 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ url_for('admin_dashboard.admin_dashboard_routes', path='affiliates') }}" class="nav-link">
+            <a href="#"
+               id="{{ url_for('admin_dashboard.admin_dashboard_routes', path='affiliates') }}"
+               class="nav-link"
+               onclick="sidebar_menu_handler(this.id)">
               <i class="nav-icon fas fa-chart-line"></i>
               <p>
                 Affiliates
@@ -66,7 +81,10 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ url_for('admin_dashboard.admin_dashboard_routes', path='accounts') }}" class="nav-link">
+            <a href="#"
+               id="{{ url_for('admin_dashboard.admin_dashboard_routes', path='accounts') }}"
+               class="nav-link"
+               onclick="sidebar_menu_handler(this.id)">
               <i class="nav-icon fas fa-user-md"></i>
               <p>
                 Accounts
@@ -74,7 +92,10 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ url_for('admin_dashboard.admin_dashboard_routes', path='help-desk') }}" class="nav-link">
+            <a href="#"
+               id="{{ url_for('admin_dashboard.admin_dashboard_routes', path='help-desk') }}"
+               class="nav-link"
+               onclick="sidebar_menu_handler(this.id)">
               <i class="nav-icon fas fa-info"></i>
               <p>
                 Help Desk
@@ -85,14 +106,16 @@
 
           </li>
           <li class="nav-item">
-            <a href="{{ url_for('admin_home.logout')}}" class="nav-link">
+            <a href="#"
+               id="{{ url_for('admin_home.logout')}}"
+               class="nav-link"
+               onclick="sidebar_menu_handler(this.id)">
               <i class="nav-icon fas fa-sign-out-alt"></i>
               <p>
                 Logout
               </p>
             </a>
           </li>
-
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
