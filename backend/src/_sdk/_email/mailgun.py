@@ -7,7 +7,7 @@
         # Next, you should add your own domain so you can send 10000 emails/month for free.
 
 """
-__author__ = "mobius-crypt"
+__developer__ = "mobius-crypt"
 __email__ = "mobiusndou@gmail.com"
 __twitter__ = "@blueitserver"
 __github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affiliate-api"
