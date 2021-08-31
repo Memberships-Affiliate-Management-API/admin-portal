@@ -1,4 +1,6 @@
 from flask import Flask
+
+from backend.src.security.apps_authenticator import app_auth_micro_service
 from config import config_instance
 from authlib.integrations.flask_client import OAuth
 from backend.src.admin_requests.api_requests import app_requests
@@ -42,10 +44,14 @@ def create_app(config_class=config_instance):
     from main.app.admin.api.admin.routes import admin_api_bp
     from main.app.admin.api.users.routes import user_api_bp
 
+    from _ipn.microservices import microservices_ipn_bp
+
+
     # admin app handlers
     app.register_blueprint(admin_api_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(admin_dashboard_bp)
+    app.register_blueprint(microservices_ipn_bp)
 
     # admin api
     app.register_blueprint(user_api_bp)
@@ -54,5 +60,6 @@ def create_app(config_class=config_instance):
     app.register_blueprint(default_handlers_bp)
 
     task_scheduler.start()
+    app_auth_micro_service.authenticate_with_admin_api()
 
     return app
