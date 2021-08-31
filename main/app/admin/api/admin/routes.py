@@ -1,9 +1,9 @@
 from typing import Optional
-
 from flask import Blueprint, request, jsonify, make_response
 from backend.src.admin_view import AdminView
 from backend.src.custom_exceptions.exceptions import status_codes
 from backend.src.security.users_authenticator import admin_auth
+from backend.src.admin_view import AdminView
 
 admin_api_bp = Blueprint('admin_dashboard', __name__)
 
@@ -20,17 +20,21 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
 
     json_data: dict = request.get_json()
     print(f'JSON Data: {json_data}')
+    admin_instance: AdminView = AdminView()
+
     if path == "dashboard":
         return jsonify(
             {'status': True, 'payload': 'dashboard under development', 'message': 'under development'}), status_codes.status_ok_code
 
     elif path == "organizations":
-        return jsonify(
-            {'status': True, 'payload': 'organizations under development', 'message': 'under development'}), status_codes.status_ok_code
+        # TODO request all organizations data
+        payload: dict = admin_instance.get_all_organizations()
+        print(f"payload : {payload}")
+        return jsonify(payload), status_codes.status_ok_code
 
     elif path == "users":
-        return jsonify(
-            {'status': True, 'payload': 'users under development', 'message': 'under development'}), status_codes.status_ok_code
+        payload: dict = admin_instance.get_main_organization_users()
+        return jsonify(payload), status_codes.status_ok_code
 
     elif path == "api-keys":
         return jsonify(
