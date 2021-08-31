@@ -2,13 +2,13 @@ from typing import Optional
 from flask import Blueprint, render_template, get_flashed_messages, make_response, url_for
 
 from backend.src.custom_exceptions.exceptions import status_codes
-from backend.src.security.users_authenticator import handle_users_auth, is_app_admin, logged_user
+from backend.src.security.users_authenticator import admin_auth
 
 admin_bp = Blueprint("admin_home", __name__)
 
 
 @admin_bp.route("/", methods=["GET"])
-@logged_user
+@admin_auth.logged_user
 def admin_home(current_user: Optional[dict]) -> tuple:
     """
         **admin_home**
@@ -16,7 +16,7 @@ def admin_home(current_user: Optional[dict]) -> tuple:
     :return:
     """
     get_flashed_messages()
-    if is_app_admin(current_user=current_user):
+    if admin_auth.is_app_admin(current_user=current_user):
         return render_template('admin/home.html', current_user=current_user)
     return render_template('admin/login.html')
 

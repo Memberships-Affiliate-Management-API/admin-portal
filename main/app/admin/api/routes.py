@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from backend.src.admin_view import AdminView
 from backend.src.custom_exceptions.exceptions import status_codes
 
@@ -15,6 +15,9 @@ def users_api(path: str) -> tuple:
         json_data: dict = request.get_json()
         email: str = json_data.get('email')
         password: str = json_data.get('password')
-        response = admin_view.login_user(email=email, password=password)
-        return jsonify(response), status_codes.status_ok_code
+        login_response = admin_view.login_user(email=email, password=password)
+        response = make_response(jsonify(login_response))
+        response.headers['content-type'] = 'application/json'
+        print(request.headers)
+        return response, status_codes.status_ok_code
 

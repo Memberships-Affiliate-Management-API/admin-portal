@@ -1,14 +1,14 @@
 from typing import Optional
 from flask import Blueprint, render_template, url_for, get_flashed_messages, redirect, flash
 from backend.src.custom_exceptions.exceptions import status_codes
-from backend.src.security.users_authenticator import logged_user, is_app_admin
+from backend.src.security.users_authenticator import admin_auth
 
 
 admin_dashboard_bp = Blueprint("admin_dashboard", __name__)
 
 
 @admin_dashboard_bp.route("/admin/dashboard", methods=["GET"])
-@logged_user
+@admin_auth.logged_user
 def admin_dashboard(current_user: Optional[dict]) -> tuple:
     """
         **admin_dashboard**
@@ -17,7 +17,7 @@ def admin_dashboard(current_user: Optional[dict]) -> tuple:
     :return:
     """
     get_flashed_messages()
-    if not is_app_admin(current_user=current_user):
+    if not admin_auth.is_app_admin(current_user=current_user):
         flash('This area is not for public use sorry')
         return redirect(url_for('admin_home.admin_home'))
 
@@ -26,7 +26,7 @@ def admin_dashboard(current_user: Optional[dict]) -> tuple:
 
 # noinspection PyTypeChecker
 @admin_dashboard_bp.route("/admin/dashboard/<path:path>", methods=["GET"])
-@logged_user
+@admin_auth.logged_user
 def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
     """
             **admin_dashboard_routes**
@@ -39,7 +39,7 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
 
     get_flashed_messages()
 
-    if not is_app_admin(current_user=current_user):
+    if not admin_auth.is_app_admin(current_user=current_user):
         flash('This area is not for public use sorry')
         return redirect(url_for('admin_home.admin_home'))
 
