@@ -1,5 +1,5 @@
-from flask import Flask
 
+from flask import Flask
 from backend.src.custom_exceptions.exceptions import UnAuthenticatedError
 from backend.src.security.apps_authenticator import app_auth_micro_service
 from backend.src.utils import is_development
