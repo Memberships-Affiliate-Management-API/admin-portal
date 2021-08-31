@@ -27,10 +27,10 @@ class AdminView:
                 return response
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def logout_user(self, email) -> dict:
+    def logout_user(self, email: str, token: str) -> dict:
         """
         **logout_user**
         """
-        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, email=email)
+        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, email=email, token=token)
         _request_id = app_requests.schedule_data_send(_endpoint=self._logout_endpoint, body=_kwargs)
 
