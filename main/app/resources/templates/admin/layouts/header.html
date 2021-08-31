@@ -9,10 +9,18 @@
         <a href="{{ url_for('admin_home.admin_home') }}" class="nav-link">Home</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="{{ url_for('admin_dashboard.admin_dashboard_routes', path='organizations') }}" class="nav-link">Organization</a>
+        <a href="#"
+           class="nav-link"
+           id="{{ url_for('admin_dashboard.admin_dashboard_routes', path='organizations') }}"
+            onclick="sidebar_menu_handler(this.id)"
+        >Organization</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="{{ url_for('admin_dashboard.admin_dashboard_routes', path='users') }}" class="nav-link">Users</a>
+        <a href="#"
+           id="{{ url_for('admin_dashboard.admin_dashboard_routes', path='users') }}"
+           class="nav-link"
+            onclick="sidebar_menu_handler(this.id)"
+        >Users</a>
       </li>
     </ul>
     <!-- SEARCH FORM -->

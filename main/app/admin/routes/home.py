@@ -8,7 +8,7 @@ admin_bp = Blueprint("admin_home", __name__)
 
 
 @admin_bp.route("/", methods=["GET"])
-@admin_auth.logged_user
+@admin_auth.logged_admin_user
 def admin_home(current_user: Optional[dict]) -> tuple:
     """
         **admin_home**
@@ -22,7 +22,7 @@ def admin_home(current_user: Optional[dict]) -> tuple:
 
 
 @admin_bp.route("/login", methods=["GET"])
-@admin_auth.logged_user
+@admin_auth.logged_admin_user
 def login(current_user: Optional[dict]) -> tuple:
     """
         **admin_home**
@@ -37,19 +37,14 @@ def login(current_user: Optional[dict]) -> tuple:
 
 
 @admin_bp.route("/logout", methods=["GET"])
-@admin_auth.logged_user
-def logout(current_user: Optional[dict]) -> tuple:
+def logout() -> tuple:
     """
         **admin_home**
             admin home page
     :return:
     """
     get_flashed_messages()
-    if admin_auth.is_app_admin(current_user=current_user):
-        return render_template('admin/logout.html', current_user=current_user)
-
-    flash('you are not logged in')
-    return render_template('admin/login.html'), status_codes.status_ok_code
+    return render_template('admin/logout.html')
 
 
 @admin_bp.route("/<string:path>", methods=["GET"])

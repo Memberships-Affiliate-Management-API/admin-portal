@@ -151,9 +151,9 @@ class AdminAuth:
             return response_data['payload']
         return None
 
-    def handle_users_auth(self, func):
+    def handle_admin_auth(self, func):
         """
-            **handle_users_auth**
+            **handle_admin_auth**
                 handles authentication on html routes for users on client dashboard
                 and admin dashboard
             :param func:
@@ -188,18 +188,18 @@ class AdminAuth:
 
             except jwt.DecodeError:
                 flash('Error decoding your token please login again', 'warning')
-                return redirect(url_for('memberships_main.memberships_main_routes', path='login'))
+                return redirect(url_for('admin_home.admin_home', path='login'))
 
             except Exception:
                 flash('Unable to locate your account please create a new account', 'warning')
-                return redirect(url_for('memberships_main.memberships_main_routes', path='register'))
+                return redirect(url_for('admin_home.admin_home', path='login'))
             return func(current_user, *args, **kwargs)
 
         return decorated
 
-    def logged_user(self, func):
+    def logged_admin_user(self, func):
         """
-            **logged_user**
+            **logged_admin_user**
                 only accesses the record of the logged in user without denying access to the route
                 if user is not logged in.
         :param func: route to wrap

@@ -10,11 +10,42 @@ admin_api_bp = Blueprint('admin_dashboard', __name__)
 
 # noinspection PyTypeChecker
 @admin_api_bp.route("/_api/admin/dashboard/<path:path>", methods=["GET", "POST"])
-@admin_auth.logged_user
+@admin_auth.handle_admin_auth
 def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
     """
 
     """
-    print(current_user)
+    print(f'CURRENT USER DETAILS: {current_user}')
+    print(f'PATH : {path}')
+
+    json_data: dict = request.get_json()
+    print(f'JSON Data: {json_data}')
+    if path == "dashboard":
+        return jsonify(
+            {'status': True, 'payload': 'dashboard under development', 'message': 'under development'}), status_codes.status_ok_code
+
+    elif path == "organizations":
+        return jsonify(
+            {'status': True, 'payload': 'organizations under development', 'message': 'under development'}), status_codes.status_ok_code
+
+    elif path == "users":
+        return jsonify(
+            {'status': True, 'payload': 'users under development', 'message': 'under development'}), status_codes.status_ok_code
+
+    elif path == "api-keys":
+        return jsonify(
+            {'status': True, 'payload': 'api_keys under development', 'message': 'under development'}), status_codes.status_ok_code
+    elif path == "affiliates":
+        return jsonify(
+            {'status': True, 'payload': 'affiliates under development', 'message': 'under development'}), status_codes.status_ok_code
+
+    elif path == "accounts":
+        return jsonify(
+            {'status': True, 'payload': 'accounts under development', 'message': 'under development'}), status_codes.status_ok_code
+    elif path == "help-desk":
+        return jsonify(
+            {'status': True, 'payload': 'uhelp-desk nder development', 'message': 'under development'}), status_codes.status_ok_code
     return jsonify(
-        {'status': True, 'payload': 'under development', 'message': 'under development'}), status_codes.status_ok_code
+            {'status': True, 'payload': 'under development', 'message': 'under development'}), status_codes.status_ok_code
+
+

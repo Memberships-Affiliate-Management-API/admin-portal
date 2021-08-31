@@ -8,7 +8,7 @@ admin_dashboard_bp = Blueprint("admin_dashboard_home", __name__)
 
 
 @admin_dashboard_bp.route("/admin/dashboard", methods=["GET", "POST"])
-@admin_auth.logged_user
+@admin_auth.handle_admin_auth
 def admin_dashboard(current_user: Optional[dict]) -> tuple:
     """
         **admin_dashboard**
