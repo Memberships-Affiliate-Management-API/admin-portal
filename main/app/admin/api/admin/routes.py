@@ -22,33 +22,39 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
     print(f'JSON Data: {json_data}')
     admin_instance: AdminView = AdminView()
 
+    token: str = json_data.get('token')
+    domain: str = request.headers.get('referrer')
+
     if path == "dashboard":
-        return jsonify(
-            {'status': True, 'payload': 'dashboard under development', 'message': 'under development'}), status_codes.status_ok_code
+        return jsonify({'status': True, 'payload': 'dashboard under development',
+                        'message': 'under development'}), status_codes.status_ok_code
 
     elif path == "organizations":
-        payload: dict = admin_instance.get_all_organizations()
+        payload: dict = admin_instance.get_all_organizations(token=token, domain=domain)
         print(f"payload : {payload}")
         return jsonify(payload), status_codes.status_ok_code
 
     elif path == "users":
-        payload: dict = admin_instance.get_main_organization_users()
+        payload: dict = admin_instance.get_main_organization_users(token=token, domain=domain)
         return jsonify(payload), status_codes.status_ok_code
 
     elif path == "api-keys":
-        return jsonify(
-            {'status': True, 'payload': 'api_keys under development', 'message': 'under development'}), status_codes.status_ok_code
+        return jsonify({'status': True, 'payload': 'api_keys under development',
+                        'message': 'under development'}), status_codes.status_ok_code
+
     elif path == "affiliates":
-        return jsonify(
-            {'status': True, 'payload': 'affiliates under development', 'message': 'under development'}), status_codes.status_ok_code
+        return jsonify({'status': True, 'payload': 'affiliates under development',
+                        'message': 'under development'}), status_codes.status_ok_code
 
     elif path == "accounts":
-        return jsonify(
-            {'status': True, 'payload': 'accounts under development', 'message': 'under development'}), status_codes.status_ok_code
+        return jsonify({'status': True, 'payload': 'accounts under development',
+                        'message': 'under development'}), status_codes.status_ok_code
+
     elif path == "help-desk":
-        return jsonify(
-            {'status': True, 'payload': 'uhelp-desk nder development', 'message': 'under development'}), status_codes.status_ok_code
-    return jsonify(
-            {'status': True, 'payload': 'under development', 'message': 'under development'}), status_codes.status_ok_code
+        return jsonify({'status': True, 'payload': 'help-desk under development',
+                        'message': 'under development'}), status_codes.status_ok_code
+
+    return jsonify({'status': True, 'payload': 'under development',
+                    'message': 'under development'}), status_codes.status_ok_code
 
 

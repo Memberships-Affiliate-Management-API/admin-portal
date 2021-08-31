@@ -40,12 +40,12 @@ class AdminView:
                 return response
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def get_all_organizations(self) -> dict:
+    def get_all_organizations(self, token: str, domain: str) -> dict:
         """
             **get_all_organizations**
 
         """
-        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id)
+        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, token=token)
         _request_id = app_requests.schedule_data_send(_endpoint=self._all_org_endpoint, body=_kwargs)
         while True:
             response = app_requests.get_response(request_id=_request_id)
@@ -53,8 +53,8 @@ class AdminView:
                 return response
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def get_main_organization_users(self) -> dict:
-        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id)
+    def get_main_organization_users(self, token: str, domain: str) -> dict:
+        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, token=token)
         _request_id = app_requests.schedule_data_send(_endpoint=self._all_org_endpoint, body=_kwargs)
         while True:
             response = app_requests.get_response(request_id=_request_id)
