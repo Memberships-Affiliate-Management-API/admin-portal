@@ -1,7 +1,7 @@
 
 from flask import Flask
 from backend.src.custom_exceptions.exceptions import UnAuthenticatedError
-from backend.src.security.apps_authenticator import app_auth_micro_service
+from backend.src.security.apps_authenticator import APPAuthenticator
 from backend.src.utils import is_development
 from config import config_instance
 from authlib.integrations.flask_client import OAuth
@@ -9,6 +9,7 @@ from backend.src.admin_requests.api_requests import app_requests
 from backend.src.cache_manager.cache_manager import cache_man
 from backend.src.scheduler.scheduler import task_scheduler
 
+app_auth_micro_service: APPAuthenticator = APPAuthenticator()
 # github authenticate - enables developers to easily sign-up to our api
 oauth = OAuth()
 github_authorize = oauth.register(
@@ -46,7 +47,7 @@ def create_app(config_class=config_instance):
     from main.app.admin.api.admin.routes import admin_api_bp
     from main.app.admin.api.users.routes import user_api_bp
 
-    from _ipn.microservices import microservices_ipn_bp
+    from _ipn.micro_auth import microservices_ipn_bp
 
     # admin app handlers
     app.register_blueprint(admin_api_bp)
@@ -62,7 +63,7 @@ def create_app(config_class=config_instance):
 
     task_scheduler.start()
     app_auth_micro_service.authenticate_with_admin_api()
-    # TODO - will do setup on first run of api backend
-    if bool(app_auth_micro_service.auth_token) or is_development():
-        return app
-    raise UnAuthenticatedError()
+
+    return app
+
+
