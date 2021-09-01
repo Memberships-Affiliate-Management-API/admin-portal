@@ -12,9 +12,11 @@ __twitter__ = "@blueitserver"
 __github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affiliate-api"
 __github_profile__ = "https://github.com/freelancing-solutions/"
 
+import time
 from typing import Optional
 
 from backend.src.admin_requests.api_requests import app_requests
+from backend.src.scheduler.scheduler import schedule_func
 from backend.src.utils import create_id
 from config import config_instance
 
@@ -29,9 +31,11 @@ class APPAuthenticator:
         self._app_id: str = create_id()
         self._app_domain: str = config_instance.ADMIN_APP_BASEURL
         self._secret_key: str = config_instance.SECRET_KEY
-        self._micro_services_auth: str = "/_ipn/micro-services/auth"
+        self._micro_services_auth: str = "_ipn/micro-services/auth"
         self.auth_token: Optional[str] = None
         self.max_retries: int = 50
+        self._auth_request_id: Optional[str] = None
+        self.auth_details: Optional[dict] = None
 
     def __str__(self) -> str:
         return f"<APPAuthenticator app_id: {self._app_id} auth_token: {self.auth_token}"
@@ -43,23 +47,24 @@ class APPAuthenticator:
         """
             **authenticate_with_admin_api**
         """
-        if not self._is_running:
-            self._is_running = True
-            self.refresh_app_id()
-            _kwargs: dict = dict(app_id=self._app_id, domain=self._app_domain, secret_key=self._secret_key)
-            _request_id: str = app_requests.schedule_data_send(_endpoint=self._micro_services_auth, body=_kwargs)
-            print(_request_id)
-            while self.max_retries:
-                response = app_requests.get_response(request_id=_request_id)
+        self.refresh_app_id()
+        _kwargs: dict = dict(app_id=self._app_id, domain=self._app_domain, secret_key=self._secret_key)
+        self._auth_request_id = app_requests.schedule_data_send(_endpoint=self._micro_services_auth, body=_kwargs)
+        schedule_func(func=self.fetch_auth_response, kwargs=dict(), delay=5)
 
-                if response is not None:
+    def fetch_auth_response(self):
+        while self.max_retries:
+            try:
+                self.auth_details = app_requests.get_response(request_id=self._auth_request_id).get('payload')
+                if self.auth_details:
+                    self.auth_token = self.auth_details['auth_token']
                     break
-                self.max_retries -= 1
+            except AttributeError:
+                pass
+            self.max_retries -= 1
+            time.sleep(1)
+        self.max_retries = 30
 
-            print(f"responses : {response}")
 
-            if isinstance(response, dict) and response.get('status'):
-                self.auth_token = response['payload']['auth_token']
-
-
+app_auth_micro_service: APPAuthenticator = APPAuthenticator()
 
