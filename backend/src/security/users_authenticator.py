@@ -18,6 +18,7 @@ from flask import current_app, request, url_for, flash
 
 from backend.src.cache_manager.cache_manager import cache_man
 from backend.src.custom_exceptions.exceptions import UnAuthenticatedError
+from backend.src.security.apps_authenticator import app_auth_micro_service
 from backend.src.utils import return_ttl
 from config import config_instance
 
@@ -31,15 +32,6 @@ class AdminAuth:
 
             :return: dict
         """
-        return self.get_admin_user_from_admin_api()
-
-    def get_admin_user_from_admin_api(self) -> Optional[dict]:
-        """
-            **get_api_admin_user_details**
-                fetch api admin user details from back-end
-
-        :return: dict -> as user
-        """
         _endpoint: str = '_api/v1/admin/users/get'
         _base_url: str = config_instance.ADMIN_APP_BASEURL
         _url: str = f'{_base_url}{_endpoint}'
@@ -47,8 +39,12 @@ class AdminAuth:
         _auth_token: str = self.encode_auth_token(uid=_secret_key)
         _organization_id: str = config_instance.ORGANIZATION_ID
         _uid: str = config_instance.ADMIN_UID
+
+        app_token: str = app_auth_micro_service.auth_token
+        domain: str = request.headers.get('Origin')
+
         user_data: dict = dict(SECRET_KEY=_secret_key, auth_token=_auth_token,
-                               organization_id=_organization_id, uid=_uid)
+                               organization_id=_organization_id, uid=_uid, app_token=app_token, domain=domain)
 
         _headers = dict(content_type='application/json', domain=config_instance.ADMIN_APP_BASEURL)
         response = requests.post(url=_url, json=user_data, headers=_headers)
@@ -135,20 +131,23 @@ class AdminAuth:
 
     @staticmethod
     @cache_man.app_cache.memoize(timeout=return_ttl('short'))
-    def send_get_user_request(uid: str) -> Optional[dict]:
+    def send_get_user_request(uid: str, app_token: str, domain: str) -> Optional[dict]:
         """
         **send_get_user_request**
             send request for user over api and return user dict
 
         **PARAMETERS**
             :param uid:
+            :param app_token: application authentication tokens
+            :param domain: authenticated domain
             :return: dict -> user record
         """
         # admin api base url
         _base_url: str = config_instance.BASE_URL
         _user_endpoint: str = "_api/v1/admin/auth/get-admin-user"
         _organization_id: str = config_instance.ORGANIZATION_ID
-        _data: dict = dict(organization_id=_organization_id, uid=uid, SECRET_KEY=config_instance.SECRET_KEY)
+        _data: dict = dict(organization_id=_organization_id, uid=uid, SECRET_KEY=config_instance.SECRET_KEY,
+                           app_token=app_token, domain=domain)
         response = requests.post(url=f"{_base_url}{_user_endpoint}", json=_data)
         response_data: dict = response.json()
         if response_data['status']:
@@ -168,6 +167,10 @@ class AdminAuth:
         def decorated(*args, **kwargs):
 
             token: Optional[str] = None
+
+            app_token: str = app_auth_micro_service.auth_token
+            domain: str = request.headers.get('Origin')
+
             # print('token headers: {}'.format(request.headers))
             if 'x-access-token' in request.headers:
                 token = request.headers.get('x-access-token')
@@ -180,7 +183,7 @@ class AdminAuth:
                 uid: Optional[str] = self.decode_auth_token(auth_token=token)
                 if bool(uid):
                     # NOTE: using client api to access user details
-                    current_user: Optional[dict] = self.send_get_user_request(uid=uid)
+                    current_user: Optional[dict] = self.send_get_user_request(uid=uid, app_token=app_token, domain=domain)
                     if not isinstance(current_user, dict):
                         raise UnAuthenticatedError(description="Unable to authenticate user")
                 else:
@@ -214,16 +217,19 @@ class AdminAuth:
             #
             #     current_user: Optional[dict] = get_admin_user()
             #     return func(current_user, *args, **kwargs)
-            print(request.headers)
+
             if 'x-access-token' in request.headers:
                 token: Optional[str] = request.headers['x-access-token']
 
-                print('token : ', token)
+                app_token: str = app_auth_micro_service.auth_token
+                domain: str = request.headers.get('Origin')
+
                 if bool(token):
                     try:
                         uid: Optional[str] = self.decode_auth_token(auth_token=token)
                         if bool(uid):
-                            user_instance: Optional[dict] = self.send_get_user_request(uid=uid)
+                            user_instance: Optional[dict] = self.send_get_user_request(uid=uid, app_token=app_token,
+                                                                                       domain=domain)
                             if isinstance(user_instance, dict):
                                 current_user: dict = user_instance
                         else:
