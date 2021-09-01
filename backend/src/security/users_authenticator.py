@@ -14,7 +14,7 @@ from typing import Optional
 
 import jwt
 import requests
-from flask import current_app, request, redirect, url_for, flash
+from flask import current_app, request, url_for, flash
 
 from backend.src.cache_manager.cache_manager import cache_man
 from backend.src.custom_exceptions.exceptions import UnAuthenticatedError
@@ -112,8 +112,8 @@ class AdminAuth:
             }
             token = jwt.encode(payload=payload, key=str(current_app.config.get('SECRET_KEY')), algorithm='HS256')
             return token
-        except jwt.InvalidAlgorithmError as e:
-            return str(e)
+        except jwt.InvalidAlgorithmError:
+            raise UnAuthenticatedError(description="system error login in please inform admin")
 
     @staticmethod
     def decode_auth_token(auth_token):
@@ -171,10 +171,10 @@ class AdminAuth:
             # print('token headers: {}'.format(request.headers))
             if 'x-access-token' in request.headers:
                 token = request.headers.get('x-access-token')
-                print('token found : {}'.format(token))
+
             # NOTE: if running on development server by-pass authentication and return admin user
-            if not token:
-                return redirect(url_for('admin_home.admin_home', path='login'))
+            if not bool(token):
+                raise UnAuthenticatedError(description="You are not logged in please login to proceed")
 
             try:
                 uid: Optional[str] = self.decode_auth_token(auth_token=token)
@@ -182,13 +182,9 @@ class AdminAuth:
                     # NOTE: using client api to access user details
                     current_user: Optional[dict] = self.send_get_user_request(uid=uid)
                     if not isinstance(current_user, dict):
-                        message: str = '''Error connecting to database or user does not exist'''
-                        flash(message, 'warning')
-                        current_user: Optional[dict] = None
+                        raise UnAuthenticatedError(description="Unable to authenticate user")
                 else:
-                    message: str = '''to access restricted areas of this web application please login'''
-                    flash(message, 'warning')
-                    current_user: Optional[dict] = None
+                    raise UnAuthenticatedError(description="Unable to authenticate user")
 
             except jwt.DecodeError:
                 raise UnAuthenticatedError(description="Error with your login credentials please login again")
