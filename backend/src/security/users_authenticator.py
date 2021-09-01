@@ -17,6 +17,7 @@ import requests
 from flask import current_app, request, redirect, url_for, flash
 
 from backend.src.cache_manager.cache_manager import cache_man
+from backend.src.custom_exceptions.exceptions import UnAuthenticatedError
 from backend.src.utils import return_ttl
 from config import config_instance
 
@@ -128,11 +129,9 @@ class AdminAuth:
             payload = jwt.decode(jwt=auth_token, key=current_app.config.get('SECRET_KEY'), algorithms=['HS256'])
             return payload['sub']
         except jwt.ExpiredSignatureError:
-            print("Error Expired Signature")
-            return None
+            raise UnAuthenticatedError(description="Expired token signature please login again")
         except jwt.InvalidTokenError:
-            print("Error : invalid token")
-            return None
+            raise UnAuthenticatedError(description="Invalid login credentials please login again")
 
     @staticmethod
     @cache_man.app_cache.memoize(timeout=return_ttl('short'))
@@ -149,11 +148,9 @@ class AdminAuth:
         _base_url: str = config_instance.BASE_URL
         _user_endpoint: str = "_api/v1/admin/auth/get-admin-user"
         _organization_id: str = config_instance.ORGANIZATION_ID
-        print(f'retrieving user from endpoint: {_base_url}{_user_endpoint}')
         _data: dict = dict(organization_id=_organization_id, uid=uid, SECRET_KEY=config_instance.SECRET_KEY)
         response = requests.post(url=f"{_base_url}{_user_endpoint}", json=_data)
         response_data: dict = response.json()
-        print(f'response from users endpoint: {response_data}')
         if response_data['status']:
             return response_data['payload']
         return None
@@ -194,12 +191,10 @@ class AdminAuth:
                     current_user: Optional[dict] = None
 
             except jwt.DecodeError:
-                flash('Error decoding your token please login again', 'warning')
-                return redirect(url_for('admin_home.admin_home', path='login'))
+                raise UnAuthenticatedError(description="Error with your login credentials please login again")
 
             except Exception:
-                flash('Unable to locate your account please create a new account', 'warning')
-                return redirect(url_for('admin_home.admin_home', path='login'))
+                raise UnAuthenticatedError(description="Error with your login credentials please login again")
             return func(current_user, *args, **kwargs)
 
         return decorated
@@ -239,7 +234,7 @@ class AdminAuth:
                             pass
                     except jwt.DecodeError:
                         # If user not logged in do nothing
-                        pass
+                        raise UnAuthenticatedError(description="Error with your login credentials please login again")
                 else:
                     pass
             return func(current_user, *args, **kwargs)
