@@ -61,6 +61,7 @@ class APIRequests:
         # obtain the _request_id to be used as an identifier for this request
         _request_id: str = headers.get('_request_id')
         response = asyncio.run(self._async_request(_url=_url, json_data=json_data, headers=headers))
+        print(f"fetched response : {response}")
 
         # compiling a response dict to contain the _request_id and the returned results of the request
         self._responses_queue.append(dict(_request_id=_request_id, response=response))
@@ -93,7 +94,7 @@ class APIRequests:
         # returning the _request_id so it can be used to retrieve the results at a later stage
         return _request_id
 
-    @cache_man.cache.memoize(timeout=return_ttl('short'), cache_none=False)
+    @cache_man.cache.memoize(timeout=return_ttl('short'))
     def get_response(self, request_id: str) -> Optional[dict]:
         """
         **get_response**
@@ -104,8 +105,9 @@ class APIRequests:
         if isinstance(self._responses_queue, list) and len(self._responses_queue):
             # at Best will return None if response not found
             try:
-                return [_response.get('response') for _response in self._responses_queue
-                        if _response.get('_request_id') == request_id][0] or None
+                _response = [_response.get('response') for _response in self._responses_queue if _response.get('_request_id') == request_id][0] or None
+                print(f"response found : {_response}")
+                return _response
             except IndexError:
                 # continue as there is nothing to do
                 pass
