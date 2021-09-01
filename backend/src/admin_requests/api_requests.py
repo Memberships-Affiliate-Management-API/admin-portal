@@ -61,6 +61,7 @@ class APIRequests:
         # obtain the _request_id to be used as an identifier for this request
         _request_id: str = headers.get('_request_id')
         response = asyncio.run(self._async_request(_url=_url, json_data=json_data, headers=headers))
+
         # compiling a response dict to contain the _request_id and the returned results of the request
         self._responses_queue.append(dict(_request_id=_request_id, response=response))
 
