@@ -21,6 +21,8 @@ class AdminView:
         logic needed to get system admin data
     """
 
+    # TODO need to do some refactoring here
+
     def __init__(self) -> None:
         self._login_endpoint: str = '_api/v1/admin/auth/login'
         self._logout_endpoint: str = '_api/v1/admin/auth/logout'
@@ -31,12 +33,13 @@ class AdminView:
         self._organization_id: str = config_instance.ORGANIZATION_ID
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def login_user(self, email: str, password: str) -> dict:
+    def login_user(self, email: str, password: str, app_token: str, domain: str) -> dict:
         """
         **login_user**
             will return login token
         """
-        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, email=email, password=password)
+        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, email=email,
+                             password=password, app_token=app_token, domain=domain)
         _request_id: str = app_requests.schedule_data_send(_endpoint=self._login_endpoint, body=_kwargs)
         while True:
             response = app_requests.get_response(request_id=_request_id)
@@ -44,11 +47,16 @@ class AdminView:
                 return response
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def logout_user(self, email: str, token: str) -> dict:
+    def logout_user(self, email: str, token: str, app_token: str, domain: str) -> dict:
         """
         **logout_user**
+        :param token: user auth token
+        :param app_token: application authentication token
+        :param domain: domain autheticated
+        :param email: user email address
         """
-        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, email=email, token=token)
+        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id,
+                             email=email, token=token, app_token=app_token, domain=domain)
         _request_id: str = app_requests.schedule_data_send(_endpoint=self._logout_endpoint, body=_kwargs)
         while True:
             response = app_requests.get_response(request_id=_request_id)
@@ -56,12 +64,12 @@ class AdminView:
                 return response
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def get_all_organizations(self, token: str, domain: str) -> dict:
+    def get_all_organizations(self, app_token: str, domain: str) -> dict:
         """
             **get_all_organizations**
 
         """
-        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, token=token)
+        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, app_token=app_token)
         _request_id: str = app_requests.schedule_data_send(_endpoint=self._all_org_endpoint, body=_kwargs)
         while True:
             response = app_requests.get_response(request_id=_request_id)
@@ -69,17 +77,17 @@ class AdminView:
                 return response
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def get_main_organization_users(self, token: str, domain: str) -> dict:
+    def get_main_organization_users(self, app_token: str, domain: str) -> dict:
         """
         **get_main_organization_users**
             returns a list of all users registered to use the API on their websites or blogs
 
-        :param token:
+        :param app_token:
         :param domain:
         return dict: system organization users or clients
         """
 
-        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, token=token)
+        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, app_token=app_token)
         _request_id: str = app_requests.schedule_data_send(_endpoint=self._all_org_endpoint, body=_kwargs)
         while True:
             response = app_requests.get_response(request_id=_request_id)
@@ -87,16 +95,16 @@ class AdminView:
                 return response
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def get_api_keys(self, token: str, domain: str) -> dict:
+    def get_api_keys(self, app_token: str, domain: str) -> dict:
         """
         **get_api_keys**
             returns a list of all api keys which are on the api
 
-        :param token:
+        :param app_token:
         :param domain:
         return dict: system organization users or clients
         """
-        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, token=token)
+        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, app_token=app_token)
         _request_id: str = app_requests.schedule_data_send(_endpoint=self._all_api_keys, body=_kwargs)
         while True:
             response = app_requests.get_response(request_id=_request_id)
