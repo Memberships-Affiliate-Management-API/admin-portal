@@ -17,7 +17,7 @@ from typing import Optional
 
 from backend.src.admin_requests.api_requests import app_requests
 from backend.src.scheduler.scheduler import schedule_func
-from backend.src.utils import create_id
+from backend.src.utils import create_id, return_ttl
 from config import config_instance
 
 
@@ -67,4 +67,3 @@ class APPAuthenticator:
 
 
 app_auth_micro_service: APPAuthenticator = APPAuthenticator()
-
