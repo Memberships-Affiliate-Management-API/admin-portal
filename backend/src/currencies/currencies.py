@@ -11,7 +11,7 @@ __github_profile__ = "https://github.com/freelancing-solutions/"
 
 import typing
 from config import config_instance
-from main import app_cache
+from backend.src.cache_manager.cache_manager import cache_man
 from backend.src.utils import return_ttl
 
 
@@ -87,7 +87,7 @@ class CurrencyUtils:
         # TODO- use an api to get the present conversion_rate
         pass
 
-    @app_cache.memoize(timeout=return_ttl('short'))
+    @cache_man.app_cache.memoize(timeout=return_ttl('short'), cache_none=False)
     def currency_conversion(self, from_amount, convert_to_symbol: str) -> any:
         """
             given an origin amount convert to any supported currency
@@ -104,7 +104,7 @@ class CurrencyUtils:
             return from_amount
         return None
 
-    @app_cache.memoize(timeout=return_ttl('short'))
+    @cache_man.app_cache.memoize(timeout=return_ttl('short'))
     def return_minimum_withdrawal_by_currency(self, currency_symbol: str) -> int:
         """
             NOTE: will return the minimum withdrawal amount based on the currency of the wallet
