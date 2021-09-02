@@ -19,7 +19,7 @@ from flask import current_app, request, url_for, flash
 from backend.src.cache_manager.cache_manager import cache_man
 from backend.src.custom_exceptions.exceptions import UnAuthenticatedError
 from backend.src.security.apps_authenticator import app_auth_micro_service
-from backend.src.utils import return_ttl
+from backend.src.utils import return_ttl, is_development
 from config import config_instance
 
 
@@ -130,7 +130,7 @@ class AdminAuth:
             raise UnAuthenticatedError(description="Invalid login credentials please login again")
 
     @staticmethod
-    @cache_man.app_cache.memoize(timeout=return_ttl('short'))
+    @cache_man.app_cache.memoize(timeout=return_ttl('long'), unless=is_development(), cache_none=False)
     def send_get_user_request(uid: str, app_token: str, domain: str) -> Optional[dict]:
         """
         **send_get_user_request**
@@ -150,9 +150,8 @@ class AdminAuth:
                            app_token=app_token, domain=domain)
         response = requests.post(url=f"{_base_url}{_user_endpoint}", json=_data)
         response_data: dict = response.json()
-        if response_data['status']:
-            return response_data['payload']
-        return None
+
+        return response_data['payload'] if response_data['status'] else None
 
     def handle_admin_auth(self, func):
         """
@@ -210,14 +209,6 @@ class AdminAuth:
         @wraps(func)
         def decorated(*args, **kwargs):
             current_user: Optional[dict] = None
-            # NOTE: by passes authentication and returns admin user as authenticated
-            # user on development
-            # if is_development():
-            #     # TODO use api here instead of user model
-            #
-            #     current_user: Optional[dict] = get_admin_user()
-            #     return func(current_user, *args, **kwargs)
-
             if 'x-access-token' in request.headers:
                 token: Optional[str] = request.headers['x-access-token']
 
