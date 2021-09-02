@@ -9,6 +9,13 @@
         <a href="{{ url_for('admin_home.admin_home') }}" class="nav-link">Home</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
+        <a href="{{ url_for('admin_home.login') }}"
+           id="{{ url_for('admin_home.login') }}"
+           class="nav-link"
+        >Login</a>
+      </li>
+
+      <li class="nav-item d-none d-sm-inline-block">
         <a href="#"
            class="nav-link"
            id="{{ url_for('admin_dashboard.admin_dashboard_routes', path='organizations') }}"
