@@ -11,13 +11,17 @@ __github_profile__ = "https://github.com/freelancing-solutions/"
 from typing import Optional
 import requests
 from flask import request
+
+from backend.src.utils import is_development
 from config import config_instance
 from backend.src.custom_exceptions.exceptions import UnAuthenticatedError, error_codes
 import functools
 from backend.src.cache_manager.cache_manager import cache_man
 
+fifteen_minutes = 15*60
 
-@cache_man.cache.memoize(timeout=15 * 60)  # timeout equals fifteen minutes // 900 seconds
+
+@cache_man.cache.memoize(timeout=fifteen_minutes, unless=is_development(), cache_none=False)  # timeout equals fifteen minutes // 900 seconds
 def is_request_valid(api_key: str, secret: str, domain: str) -> bool:
     """
     **is_api_key_valid**

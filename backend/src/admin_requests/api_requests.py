@@ -94,7 +94,7 @@ class APIRequests:
         # returning the _request_id so it can be used to retrieve the results at a later stage
         return _request_id
 
-    @cache_man.cache.memoize(timeout=return_ttl('short'))
+    @cache_man.cache.memoize(timeout=return_ttl('short'), cache_none=False)
     def get_response(self, request_id: str) -> Optional[dict]:
         """
         **get_response**
