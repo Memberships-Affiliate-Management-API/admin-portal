@@ -31,4 +31,3 @@ def schedule_func(func: Callable, kwargs: dict, delay: int = 10) -> None:
     job = task_scheduler.add_job(func=func, trigger='date', run_date=twenty_seconds_after, kwargs=kwargs,
                                  id=create_unique_id(), name="schedule_func", misfire_grace_time=360)
     print('job is : ', job)
-
