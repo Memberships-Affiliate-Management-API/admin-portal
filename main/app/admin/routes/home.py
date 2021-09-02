@@ -22,19 +22,12 @@ def admin_home(current_user: Optional[dict]) -> tuple:
 
 
 @admin_bp.route("/login", methods=["GET"])
-@admin_auth.logged_admin_user
-def login(current_user: Optional[dict]) -> tuple:
+def login() -> tuple:
     """
         **admin_home**
             admin home page
     :return:
     """
-    get_flashed_messages()
-    if admin_auth.is_app_admin(current_user=current_user):
-        flash('you are already logged in')
-        print("already logged in")
-        return render_template('admin/home.html', current_user=current_user)
-    print("go and login")
     return render_template('admin/login.html'), status_codes.status_ok_code
 
 
