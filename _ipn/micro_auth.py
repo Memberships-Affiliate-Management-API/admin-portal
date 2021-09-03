@@ -20,7 +20,7 @@ microservices_ipn_bp = Blueprint("microservices_ipn", __name__)
 
 
 @microservices_ipn_bp.route('/_ipn/micro-services/verify-app-id', methods=["POST"])
-@cache_man.cache.cached(timeout=return_ttl('short'), unless=is_development(), cache_none=False)
+# @cache_man.cache.cached(timeout=return_ttl('short'), unless=is_development(), cache_none=False)
 def verify_app_id() -> tuple:
     """
     **verify_app_id**

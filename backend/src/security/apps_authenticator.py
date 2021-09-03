@@ -13,6 +13,7 @@ __github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affi
 __github_profile__ = "https://github.com/freelancing-solutions/"
 
 import time
+from flask import current_app
 from typing import Optional
 
 from backend.src.admin_requests.api_requests import app_requests
@@ -47,10 +48,10 @@ class APPAuthenticator:
         """
             **authenticate_with_admin_api**
         """
-        self.refresh_app_id()
+        # self.refresh_app_id()
         _kwargs: dict = dict(app_id=self._app_id, domain=self._app_domain, secret_key=self._secret_key)
         self._auth_request_id = app_requests.schedule_data_send(_endpoint=self._micro_services_auth, body=_kwargs)
-        schedule_func(func=self.fetch_auth_response, kwargs=dict(), delay=5)
+        schedule_func(func=self.fetch_auth_response, kwargs=dict(), delay=5, job_name='fetch_response')
 
     def fetch_auth_response(self):
         while self.max_retries:
