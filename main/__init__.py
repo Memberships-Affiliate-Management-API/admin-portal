@@ -62,7 +62,8 @@ def create_app(config_class=config_instance):
 
         task_scheduler.start()
 
+        app.before_first_request(f=app_auth_micro_service.authenticate_with_admin_api)
 
-        app_auth_micro_service.authenticate_with_admin_api()
+        # app_auth_micro_service.authenticate_with_admin_api()
 
     return app
