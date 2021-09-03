@@ -61,6 +61,8 @@ def create_app(config_class=config_instance):
         app.register_blueprint(default_handlers_bp)
 
         task_scheduler.start()
+
+
         app_auth_micro_service.authenticate_with_admin_api()
 
     return app
