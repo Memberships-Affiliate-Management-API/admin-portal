@@ -18,16 +18,22 @@ task_scheduler = BackgroundScheduler()
 cron_scheduler = BackgroundScheduler()
 
 
-def schedule_func(func: Callable, kwargs: dict, delay: int = 10) -> None:
+def schedule_func(func: Callable, kwargs: dict, delay: int = 10, job_name: str = "schedule_func") -> None:
     """
     **schedule_cache_deletion**
         schedule cache deletion such that it occurs sometime time in the future
     :param func:
     :param kwargs:
+    :param job_name: "schedule_func"
     :param delay: delay in milliseconds
     :return: None
     """
     twenty_seconds_after = datetime.now() + timedelta(milliseconds=delay)
+    for job in task_scheduler.get_jobs():
+        job_str: str = str(job)
+        if job_str.startswith(job_name):
+            return None
+
     job = task_scheduler.add_job(func=func, trigger='date', run_date=twenty_seconds_after, kwargs=kwargs,
-                                 id=create_unique_id(), name="schedule_func", misfire_grace_time=360)
+                                 id=create_unique_id(), name=job_name, misfire_grace_time=360)
     print('job is : ', job)
