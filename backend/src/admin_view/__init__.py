@@ -9,10 +9,15 @@ __github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affi
 __github_profile__ = "https://github.com/freelancing-solutions/"
 __licence__ = "MIT"
 
+import json
 import time
+from json import JSONDecodeError
+from typing import Optional
+
+import aiohttp
 
 from backend.src.admin_requests.api_requests import app_requests
-from backend.src.custom_exceptions.exceptions import EnvironNotSet
+from backend.src.custom_exceptions.exceptions import EnvironNotSet, RemoteDataError
 from backend.src.utils import return_ttl, create_id
 from config import config_instance
 from backend.src.cache_manager.cache_manager import cache_man
@@ -39,6 +44,12 @@ class AdminView:
         self._secret_key: str = config_instance.SECRET_KEY
         self._base_url: str = config_instance.BASE_URL
 
+    @staticmethod
+    async def _async_request(_url, json_data, headers) -> Optional[dict]:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url=_url, json=json_data, headers=headers) as response:
+                return await response.json()
+
     def _requests_(self, _endpoint: str, body: dict) -> tuple:
         """
 
@@ -51,13 +62,23 @@ class AdminView:
             body.update(SECRET_KEY=self._secret_key)
         else:
             body: dict = dict(SECRET_KEY=self._secret_key)
-        headers: dict = {'content-type': 'application/json'}
 
+        headers: dict = {'content-type': 'application/json'}
         response = requests.post(url=_url, json=body, headers=headers)
-        json_data = response.json()
-        print(json_data)
-        status_code = response.status_code
-        return json_data, status_code
+
+        print(f"Requests Response: {response}")
+        print(response.headers)
+        if 'application/json' == response.headers.get('Content-Type'):
+            try:
+                status_code = response.status_code
+                json_data: dict = response.json()
+                print(json_data)
+
+                return json_data, status_code
+            except JSONDecodeError as e:
+                print(f'Response: {response.text()}')
+                print(f'ERROR: {e}')
+        raise RemoteDataError()
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
     def login_user(self, email: str, password: str, app_token: str, domain: str) -> tuple:

@@ -38,4 +38,4 @@ def schedule_func(func: Callable, kwargs: dict, delay: int = 10, job_name: str =
 
     job = task_scheduler.add_job(func=func, trigger='date', run_date=delayed, kwargs=kwargs,
                                  id=create_unique_id(), name=job_name, misfire_grace_time=360)
-    print('job is : ', job)
+
