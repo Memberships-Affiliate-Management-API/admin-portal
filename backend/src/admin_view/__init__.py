@@ -9,10 +9,15 @@ __github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affi
 __github_profile__ = "https://github.com/freelancing-solutions/"
 __licence__ = "MIT"
 
+import time
+
 from backend.src.admin_requests.api_requests import app_requests
-from backend.src.utils import return_ttl
+from backend.src.custom_exceptions.exceptions import EnvironNotSet
+from backend.src.utils import return_ttl, create_id
 from config import config_instance
 from backend.src.cache_manager.cache_manager import cache_man
+import asyncio
+import requests
 
 
 class AdminView:
@@ -31,53 +36,64 @@ class AdminView:
         self._uid: str = config_instance.ADMIN_UID
         self._email: str = config_instance.ADMIN_EMAIL
         self._organization_id: str = config_instance.ORGANIZATION_ID
+        self._secret_key: str = config_instance.SECRET_KEY
+        self._base_url: str = config_instance.BASE_URL
+
+    def _requests_(self, _endpoint: str, body: dict) -> tuple:
+        """
+
+        """
+        if not bool(self._base_url):
+            raise EnvironNotSet()
+
+        _url: str = f'{self._base_url}{_endpoint}'
+        if isinstance(body, dict):
+            body.update(SECRET_KEY=self._secret_key)
+        else:
+            body: dict = dict(SECRET_KEY=self._secret_key)
+        headers: dict = {'content-type': 'application/json'}
+
+        response = requests.post(url=_url, json=body, headers=headers)
+        json_data = response.json()
+        print(json_data)
+        status_code = response.status_code
+        return json_data, status_code
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def login_user(self, email: str, password: str, app_token: str, domain: str) -> dict:
+    def login_user(self, email: str, password: str, app_token: str, domain: str) -> tuple:
         """
         **login_user**
             will return login token
         """
         _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, email=email,
                              password=password, app_token=app_token, domain=domain)
-        _request_id: str = app_requests.schedule_data_send(_endpoint=self._login_endpoint, body=_kwargs)
-        while True:
-            response = app_requests.get_response(request_id=_request_id)
-            if response is not None:
-                return response
+
+        return self._requests_(_endpoint=self._login_endpoint, body=_kwargs)
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def logout_user(self, email: str, token: str, app_token: str, domain: str) -> dict:
+    def logout_user(self, email: str, token: str, app_token: str, domain: str) -> tuple:
         """
         **logout_user**
         :param token: user auth token
         :param app_token: application authentication token
-        :param domain: domain autheticated
+        :param domain: domain authenticated
         :param email: user email address
         """
         _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id,
                              email=email, token=token, app_token=app_token, domain=domain)
-        _request_id: str = app_requests.schedule_data_send(_endpoint=self._logout_endpoint, body=_kwargs)
-        while True:
-            response = app_requests.get_response(request_id=_request_id)
-            if response is not None:
-                return response
+        return self._requests_(_endpoint=self._logout_endpoint, body=_kwargs)
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def get_all_organizations(self, app_token: str, domain: str) -> dict:
+    def get_all_organizations(self, app_token: str, domain: str) -> tuple:
         """
             **get_all_organizations**
 
         """
         _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, app_token=app_token)
-        _request_id: str = app_requests.schedule_data_send(_endpoint=self._all_org_endpoint, body=_kwargs)
-        while True:
-            response = app_requests.get_response(request_id=_request_id)
-            if response is not None:
-                return response
+        return self._requests_(_endpoint=self._all_org_endpoint, body=_kwargs)
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def get_main_organization_users(self, app_token: str, domain: str) -> dict:
+    def get_main_organization_users(self, app_token: str, domain: str) -> tuple:
         """
         **get_main_organization_users**
             returns a list of all users registered to use the API on their websites or blogs
@@ -88,14 +104,10 @@ class AdminView:
         """
 
         _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, app_token=app_token)
-        _request_id: str = app_requests.schedule_data_send(_endpoint=self._all_org_endpoint, body=_kwargs)
-        while True:
-            response = app_requests.get_response(request_id=_request_id)
-            if response is not None:
-                return response
+        return self._requests_(_endpoint=self._all_org_endpoint, body=_kwargs)
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def get_api_keys(self, app_token: str, domain: str) -> dict:
+    def get_api_keys(self, app_token: str, domain: str) -> tuple:
         """
         **get_api_keys**
             returns a list of all api keys which are on the api
@@ -105,8 +117,4 @@ class AdminView:
         return dict: system organization users or clients
         """
         _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, app_token=app_token)
-        _request_id: str = app_requests.schedule_data_send(_endpoint=self._all_api_keys, body=_kwargs)
-        while True:
-            response = app_requests.get_response(request_id=_request_id)
-            if response is not None:
-                return response
+        return self._requests_(_endpoint=self._all_api_keys, body=_kwargs)

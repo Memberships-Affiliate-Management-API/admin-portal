@@ -76,7 +76,7 @@ class APIRequests:
         :param body:
         :return: str -> request_id
         """
-        if not self._base_url:
+        if not bool(self._base_url):
             raise EnvironNotSet()
 
         _url: str = f'{self._base_url}{_endpoint}'

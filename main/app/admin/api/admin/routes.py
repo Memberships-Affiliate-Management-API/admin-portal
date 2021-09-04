@@ -41,18 +41,14 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
                         'message': 'under development'}), status_codes.status_ok_code
 
     elif path == "organizations":
-        payload: dict = admin_instance.get_all_organizations(app_token=app_token, domain=domain)
-        print(f"payload : {payload}")
-        return jsonify(payload), status_codes.status_ok_code
+        return admin_instance.get_all_organizations(app_token=app_token, domain=domain)
 
     elif path == "users":
         # TODO replace with App Token
-        payload: dict = admin_instance.get_main_organization_users(app_token=app_token, domain=domain)
-        return jsonify(payload), status_codes.status_ok_code
+        return admin_instance.get_main_organization_users(app_token=app_token, domain=domain)
 
     elif path == "api-keys":
-        payload: dict = admin_instance.get_api_keys(app_token=app_token, domain=domain)
-        return jsonify(payload), status_codes.status_ok_code
+        return admin_instance.get_api_keys(app_token=app_token, domain=domain)
 
     elif path == "affiliates":
         return jsonify({'status': True, 'payload': 'affiliates under development',

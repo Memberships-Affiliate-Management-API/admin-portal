@@ -28,12 +28,14 @@ def schedule_func(func: Callable, kwargs: dict, delay: int = 10, job_name: str =
     :param delay: delay in milliseconds
     :return: None
     """
-    twenty_seconds_after = datetime.now() + timedelta(milliseconds=delay)
+
     for job in task_scheduler.get_jobs():
         job_str: str = str(job)
         if job_str.startswith(job_name):
             return None
 
-    job = task_scheduler.add_job(func=func, trigger='date', run_date=twenty_seconds_after, kwargs=kwargs,
+    delayed: datetime = datetime.now() + timedelta(milliseconds=delay)
+
+    job = task_scheduler.add_job(func=func, trigger='date', run_date=delayed, kwargs=kwargs,
                                  id=create_unique_id(), name=job_name, misfire_grace_time=360)
     print('job is : ', job)

@@ -20,20 +20,10 @@ def users_api(path: str) -> tuple:
         json_data: dict = request.get_json()
         email: str = json_data.get('email')
         password: str = json_data.get('password')
-        login_response = admin_view.login_user(email=email, password=password, app_token=app_token, domain=domain)
-        response = make_response(jsonify(login_response))
-        response.headers['content-type'] = 'application/json'
-        return response, status_codes.status_ok_code
+        return admin_view.login_user(email=email, password=password, app_token=app_token, domain=domain)
 
     elif path == "logout":
         json_data: dict = request.get_json()
         email: str = json_data.get('email')
         token: str = json_data.get('token')
-        logout_response: dict = admin_view.logout_user(email=email, token=token, app_token=app_token, domain=domain)
-        response = make_response(jsonify(logout_response))
-        response.headers['content-type'] = 'application/json'
-        return response, status_codes.status_ok_code
-
-
-
-
+        return admin_view.logout_user(email=email, token=token, app_token=app_token, domain=domain)
