@@ -65,15 +65,6 @@ self.addEventListener('load', () => {
 
     let handle_user_messages = (data) => {
         switch (data.status){
-            case "counted": {
-                localStorage.setItem('visitors', data.unique_visitors)
-                localStorage.setItem('return_visitors', data.return_visitors)
-                localStorage.setItem('counted', 'yes')
-            }break;
-            case "page-view":{
-                localStorage.setItem('page_views', data.page_views )
-            }break;
-            default: break;
         }
     }
 
