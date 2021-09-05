@@ -49,10 +49,10 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
         return admin_instance.get_main_organization_users(app_token=app_token, domain=domain)
 
     elif path == "api-keys":
-        return admin_instance.get_api_keys(app_token=app_token, domain=domain)
+        return admin_instance.get_all_api_keys(app_token=app_token, domain=domain)
 
     elif path == "affiliates":
-        return admin_instance.get_affiliates(app_token=app_token, domain=domain)
+        return admin_instance.get_all_affiliates(app_token=app_token, domain=domain)
 
     elif path == "accounts":
         return admin_instance.get_all_subscriptions(app_token=app_token, domain=domain)

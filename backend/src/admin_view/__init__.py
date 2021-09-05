@@ -123,9 +123,9 @@ class AdminView:
         return self._requests_(_endpoint=self._all_org_endpoint, body=_kwargs)
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def get_api_keys(self, app_token: str, domain: str) -> tuple:
+    def get_all_api_keys(self, app_token: str, domain: str) -> tuple:
         """
-        **get_api_keys**
+        **get_all_api_keys**
             returns a list of all api keys which are on the api
 
         :param app_token:
@@ -136,7 +136,7 @@ class AdminView:
         return self._requests_(_endpoint=self._all_api_keys, body=_kwargs)
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))
-    def get_affiliates(self, app_token: str, domain: str) -> tuple:
+    def get_all_affiliates(self, app_token: str, domain: str) -> tuple:
         """
 
         """

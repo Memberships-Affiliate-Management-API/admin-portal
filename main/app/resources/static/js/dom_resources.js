@@ -17,7 +17,9 @@ function return_dashboard_dom(){
     return `
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title"> Dashboard </h3>               
+            <h3 class="card-title"> Dashboard </h3>
+            <br />
+            <span class="card-text"> Memberships &amp; Affiliates - Dashboard</span>          
         </div>
         <div class="card-body">
             <!-- TODO add dashboard details here        -->
@@ -41,7 +43,10 @@ function return_organizations_dom(){
     return `
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"> Organizations </h3>               
+                <h3 class="card-title"> Organizations </h3>
+                <br />
+                <span class="card-text"> Memberships &amp; Affiliates - Organizations</span>
+                         
             </div>
             <div class="card-body">      
                 <!-- insert a table of organizations here as contents -->
@@ -98,7 +103,9 @@ function return_users_dom(){
     return `
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title"> Users </h3>               
+            <h3 class="card-title"> Users </h3>      
+            <br/>
+            <span class="card-text"> Memberships &amp; Affiliates - Users </span>         
         </div>
         <div class="card-body">
         <table class="table table-responsive">
@@ -157,7 +164,9 @@ function return_api_dom(){
    return `
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title"> API Keys </h3>               
+            <h3 class="card-title"> API Keys </h3>
+            <br />
+            <span class="card-text"> Memberships &amp; Affiliates - API Keys</span>            
         </div>
         <div class="card-body">
             <table class="table table-responsive">
@@ -206,7 +215,9 @@ function return_affiliates_dom(){
     return `
         <div class="card">
         <div class="card-header">
-            <h3 class="card-title"> Affiliates </h3>               
+            <h3 class="card-title"> Affiliates </h3>
+            <br/>
+            <span class="card-text"> Memberships &amp; Affiliates - Affiliates</span>           
         </div>
         <div class="card-body">
         <table class="table table-responsive">
@@ -260,8 +271,9 @@ function return_accounts_dom(){
     return `
         <div class="card">
         <div class="card-header">
-            <h3 class="card-title"> Accounts </h3>       
-            <span class="card-text">Subscribers or members of this organization</span>       
+            <h3 class="card-title"> Accounts </h3>
+            <br>   
+            <span class="card-text">Memberships &amp; Affiliates - Accounts / Subscribers</span>       
         </div>
         <div class="card-body">
         <table class="table table-responsive">
@@ -319,10 +331,18 @@ function return_help_desk_dom(){
     return `
         <div class="card">
         <div class="card-header">
-            <h3 class="card-title"> Help Desk </h3>               
+            <h3 class="card-title"> Help Desk </h3>
+            <br />
+            <span class="card-text"> Memberships &amp; Affiliates - Help Desk</span>     
         </div>
         <div class="card-body">
-        
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                    
+                    </tr>                    
+                </thead>
+            </table>        
         </div>   
         <div class="card-footer">
             <p class="card-text">{{ message }}</p>
