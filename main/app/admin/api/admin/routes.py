@@ -37,6 +37,7 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
     # TODO - add user token to current_user and then proceed to use it on the app
 
     if path == "dashboard":
+        # retrieve dashboard stats from this route
         return jsonify({'status': True, 'payload': 'dashboard under development',
                         'message': 'under development'}), status_codes.status_ok_code
 
@@ -51,12 +52,10 @@ def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
         return admin_instance.get_api_keys(app_token=app_token, domain=domain)
 
     elif path == "affiliates":
-        return jsonify({'status': True, 'payload': 'affiliates under development',
-                        'message': 'under development'}), status_codes.status_ok_code
+        return admin_instance.get_affiliates(app_token=app_token, domain=domain)
 
     elif path == "accounts":
-        return jsonify({'status': True, 'payload': 'accounts under development',
-                        'message': 'under development'}), status_codes.status_ok_code
+        return admin_instance.get_all_subscriptions(app_token=app_token, domain=domain)
 
     elif path == "help-desk":
         return jsonify({'status': True, 'payload': 'help-desk under development',

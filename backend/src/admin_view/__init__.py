@@ -38,6 +38,8 @@ class AdminView:
         self._logout_endpoint: str = '_api/v1/admin/auth/logout'
         self._all_org_endpoint: str = '_api/v1/admin/organizations/get-all'
         self._all_api_keys: str = '_api/v1/admin/api-keys/get-all'
+        self._all_affiliates: str = '_api/v1/admin/affiliates/get-all'
+        self._get_all_subscriptions: str = '_api/v1/admin/memberships/get-all'
         self._uid: str = config_instance.ADMIN_UID
         self._email: str = config_instance.ADMIN_EMAIL
         self._organization_id: str = config_instance.ORGANIZATION_ID
@@ -66,8 +68,6 @@ class AdminView:
         headers: dict = {'content-type': 'application/json'}
         response = requests.post(url=_url, json=body, headers=headers)
 
-        print(f"Requests Response: {response}")
-        print(response.headers)
         if 'application/json' == response.headers.get('Content-Type'):
             try:
                 status_code = response.status_code
@@ -76,7 +76,6 @@ class AdminView:
 
                 return json_data, status_code
             except JSONDecodeError as e:
-                print(f'Response: {response.text()}')
                 print(f'ERROR: {e}')
         raise RemoteDataError()
 
@@ -139,3 +138,19 @@ class AdminView:
         """
         _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, app_token=app_token)
         return self._requests_(_endpoint=self._all_api_keys, body=_kwargs)
+
+    @cache_man.cache.memoize(timeout=return_ttl('short'))
+    def get_affiliates(self, app_token: str, domain: str) -> tuple:
+        """
+
+        """
+        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, app_token=app_token)
+        return self._requests_(_endpoint=self._all_affiliates, body=_kwargs)
+
+    @cache_man.cache.memoize(timeout=return_ttl('short'))
+    def get_all_subscriptions(self, app_token: str, domain: str) -> tuple:
+        """
+
+        """
+        _kwargs: dict = dict(uid=self._uid, organization_id=self._organization_id, domain=domain, app_token=app_token)
+        return self._requests_(_endpoint=self._get_all_subscriptions, body=_kwargs)
