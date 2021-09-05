@@ -251,9 +251,24 @@ function return_accounts_dom(){
     return `
         <div class="card">
         <div class="card-header">
-            <h3 class="card-title"> Accounts </h3>               
+            <h3 class="card-title"> Accounts </h3>       
+            <span class="card-text">Subscribers or members of this organization</span>       
         </div>
         <div class="card-body">
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <td>uid</td>
+                    <td>plan_id</td>
+                    <td>Payment Status</td>
+                    <td>Date Created</td>
+                    <td>Start Date</td>
+                    <td>Payment Method</td>
+                    <td>Is Active</td>
+                </tr>            
+            </thead>
+        
+        </table>
         
         </div>           
         <div class="card-footer">
