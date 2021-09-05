@@ -191,7 +191,7 @@ async function load_dom_resources(selector){
      * app.js:159 /_api/admin/dashboard/users
      */
     console.log(selector)
-    let selected_dom = ""
+    let selected_dom
     switch(selector){
         case "organizations": selected_dom = return_organizations_dom(); break;
         case "api-keys": selected_dom = return_api_dom(); break;
