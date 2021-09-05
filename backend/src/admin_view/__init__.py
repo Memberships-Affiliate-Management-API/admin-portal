@@ -9,20 +9,16 @@ __github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affi
 __github_profile__ = "https://github.com/freelancing-solutions/"
 __licence__ = "MIT"
 
-import json
-import time
 from json import JSONDecodeError
 from typing import Optional
 
 import aiohttp
-
-from backend.src.admin_requests.api_requests import app_requests
-from backend.src.custom_exceptions.exceptions import EnvironNotSet, RemoteDataError
-from backend.src.utils import return_ttl, create_id
-from config import config_instance
-from backend.src.cache_manager.cache_manager import cache_man
-import asyncio
 import requests
+
+from backend.src.cache_manager.cache_manager import cache_man
+from backend.src.custom_exceptions.exceptions import EnvironNotSet, RemoteDataError
+from backend.src.utils import return_ttl
+from config import config_instance
 
 
 class AdminView:

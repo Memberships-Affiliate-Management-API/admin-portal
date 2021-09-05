@@ -44,7 +44,7 @@ def create_app(config_class=config_instance):
 
         from main.app.admin.routes.home import admin_bp
         from main.app.admin.api.admin.routes import admin_api_bp
-        from main.app.admin.api.users.routes import user_api_bp
+        from main.app.admin.api.auth.routes import auth_admin_api_bp
 
         from _ipn.micro_auth import microservices_ipn_bp
 
@@ -55,7 +55,7 @@ def create_app(config_class=config_instance):
         app.register_blueprint(microservices_ipn_bp)
 
         # admin api
-        app.register_blueprint(user_api_bp)
+        app.register_blueprint(auth_admin_api_bp)
 
         # Error Handlers
         app.register_blueprint(default_handlers_bp)
