@@ -11,6 +11,7 @@
 
 self.addEventListener('load', () => {
     let token_sent = false;
+    const incoming_notifications_messages = [];
     // Dispatch messages to service worker
     let send_auth_to_service_worker = async (message )=> {
         navigator.serviceWorker.ready.then(registration => {
@@ -161,12 +162,12 @@ let sidebar_menu_handler = async (_endpoint)=> {
     let response = await fetch(request)
     // console.log(await response.text())
     const selector = _endpoint.split("/")[4]
-    const handle_bars_dom = load_dom_resources(selector)
+    const handle_bars_dom = await load_dom_resources(selector)
     const _result = await response.json()
-    document.getElementById('content').innerHTML = process_dom(handle_bars_dom, _result)
+    document.getElementById('content').innerHTML = await process_dom(handle_bars_dom, _result)
 }
 
-function process_dom(handle_bars_dom, _result){
+async function process_dom(handle_bars_dom, _result){
     /**
      * Given a handle bars template populate it with results
      */
@@ -178,7 +179,7 @@ function process_dom(handle_bars_dom, _result){
     })
 }
 
-function load_dom_resources(selector){
+async function load_dom_resources(selector){
     /**
      * Dom Selectors
      * app.js:159 /_api/admin/dashboard/organizations

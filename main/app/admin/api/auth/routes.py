@@ -3,11 +3,11 @@ from backend.src.admin_view import AdminView
 from backend.src.custom_exceptions.exceptions import status_codes
 from backend.src.security.apps_authenticator import app_auth_micro_service
 
-user_api_bp = Blueprint('user_api', __name__)
+auth_admin_api_bp = Blueprint('admin_auth_api', __name__)
 
 
-@user_api_bp.route('/api/v1/user/<string:path>', methods=["POST"])
-def users_api(path: str) -> tuple:
+@auth_admin_api_bp.route('/api/v1/user/<string:path>', methods=["POST"])
+def auth_api(path: str) -> tuple:
     """
 
     """
