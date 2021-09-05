@@ -57,7 +57,16 @@ function return_organizations_dom(){
                             <td>Home URL</td>                           
                         </tr>                    
                     </thead>
-                    <tbody>                                        
+                    <tbody>             
+                        <tr>
+                            <td></td>                    
+                            <td></td>                    
+                            <td></td>                    
+                            <td></td>                    
+                            <td></td>                    
+                            <td></td>                    
+                            <td></td>                        
+                        </tr>                           
                     </tbody>    
                     <tfoot>
                         <tr>
@@ -200,7 +209,7 @@ function return_affiliates_dom(){
             <h3 class="card-title"> Affiliates </h3>               
         </div>
         <div class="card-body">
-        <table>
+        <table class="table table-responsive">
             <thead>
                 <tr>
                     <td>affiliate id</td>
@@ -267,14 +276,34 @@ function return_accounts_dom(){
                     <td>Is Active</td>
                 </tr>            
             </thead>
-        
+            <tbody>
+                <tr>
+                    <td></td>                
+                    <td></td>                
+                    <td></td>                
+                    <td></td>                
+                    <td></td>                
+                    <td></td>                
+                    <td></td>                
+                </tr>            
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>uid</td>
+                    <td>plan_id</td>
+                    <td>Payment Status</td>
+                    <td>Date Created</td>
+                    <td>Start Date</td>
+                    <td>Payment Method</td>
+                    <td>Is Active</td>
+                </tr>                        
+            </tfoot>                    
         </table>
         
         </div>           
         <div class="card-footer">
             <p class="card-text">{{ message }}</p>
-        </div>         
-         
+        </div>                  
     </div>    
     `
 }
