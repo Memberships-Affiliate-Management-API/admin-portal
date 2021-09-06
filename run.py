@@ -19,12 +19,12 @@ app = create_app(config_class=config_instance)
 debug = is_development() and config_instance.DEBUG
 # Press the green button in the gutter to run the script.
 
-# TODO Add logs handler which can send all errors to memberships and Affiliate Management Slack Channel
+# TODO #1 Add logs handler which can send all errors to memberships and Affiliate Management Slack Channel
 
 if __name__ == '__main__':
     if is_development():
         # NOTE: this is a development server
-        app.run(debug=debug, use_reloader=True, host='127.0.0.1', port=int(os.environ.get('PORT', 8082)))
+        app.run(debug=debug, use_reloader=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8082)))
     else:
         app.run(debug=debug, use_reloader=False, host='0.0.0.0', port=int(os.environ.get('PORT', 8082)))
 

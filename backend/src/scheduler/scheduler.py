@@ -29,10 +29,9 @@ def schedule_func(func: Callable, kwargs: dict, delay: int = 10, job_name: str =
     :return: None
     """
 
-    for job in task_scheduler.get_jobs():
-        job_str: str = str(job)
-        if job_str.startswith(job_name):
-            return None
+    job_exists: list = [job for job in task_scheduler.get_jobs() if str(job).startswith(job_name)]
+    if job_exists:
+        return None
 
     delayed: datetime = datetime.now() + timedelta(milliseconds=delay)
 
