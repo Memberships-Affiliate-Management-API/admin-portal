@@ -9,11 +9,14 @@ __github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affi
 __github_profile__ = "https://github.com/freelancing-solutions/"
 __licence__ = "MIT"
 
+import asyncio
+import json
 from json import JSONDecodeError
 from typing import Optional
 
 import aiohttp
 import requests
+from flask import jsonify
 
 from backend.src.cache_manager.cache_manager import cache_man
 from backend.src.custom_exceptions.exceptions import EnvironNotSet, RemoteDataError
@@ -43,10 +46,10 @@ class AdminView:
         self._base_url: str = config_instance.BASE_URL
 
     @staticmethod
-    async def _async_request(_url, json_data, headers) -> Optional[dict]:
+    async def _async_request(_url, json_data, headers) -> tuple:
         async with aiohttp.ClientSession() as session:
             async with session.post(url=_url, json=json_data, headers=headers) as response:
-                return await response.json()
+                return await response.json(), response.status, response.headers
 
     def _requests_(self, _endpoint: str, body: dict) -> tuple:
         """
@@ -62,17 +65,15 @@ class AdminView:
             body: dict = dict(SECRET_KEY=self._secret_key)
 
         headers: dict = {'content-type': 'application/json'}
-        response = requests.post(url=_url, json=body, headers=headers)
+        # response = requests.post(url=_url, json=body, headers=headers)
+        response, status_code, headers = asyncio.run(self._async_request(_url=_url, json_data=body, headers=headers))
 
-        if 'application/json' == response.headers.get('Content-Type'):
-            try:
-                status_code = response.status_code
-                json_data: dict = response.json()
-                print(json_data)
+        print(f"response : {response}")
+        print(f"status code: {status_code}")
+        print(f"headers : {headers}")
 
-                return json_data, status_code
-            except JSONDecodeError as e:
-                print(f'ERROR: {e}')
+        if 'application/json' == headers.get('Content-Type'):
+            return jsonify(response), status_code
         raise RemoteDataError()
 
     @cache_man.cache.memoize(timeout=return_ttl('short'))

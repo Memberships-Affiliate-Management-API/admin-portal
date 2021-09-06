@@ -42,7 +42,7 @@ def return_error(e) -> tuple:
 
     if config_instance.DEBUG:
         print(f"Description: {e.description} Error_Code: {e.code}")
-    return jsonify({'status': False, 'message': e.description}), e.code
+    return jsonify(dict(status=False, message=e.description)), e.code
 
 
 @default_handlers_bp.app_errorhandler(BadRequest)
