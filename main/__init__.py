@@ -4,7 +4,6 @@ from flask import Flask
 
 from backend.src.admin_requests.api_requests import app_requests
 from backend.src.cache_manager.cache_manager import cache_man
-from backend.src.scheduler.scheduler import task_scheduler
 from backend.src.security.apps_authenticator import app_auth_micro_service
 from config import config_instance
 
@@ -59,8 +58,6 @@ def create_app(config_class=config_instance):
 
         # Error Handlers
         app.register_blueprint(default_handlers_bp)
-
-        task_scheduler.start()
 
         app.before_first_request(f=app_auth_micro_service.authenticate_with_admin_api)
 

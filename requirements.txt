@@ -3,13 +3,13 @@ Flask~=1.1.2
 Flask-Bcrypt
 Flask-Caching
 Jinja2
-pyjwt
+pyjwt~=2.1.0
 redis
 requests~=2.25.1
 shortuuid
 Werkzeug~=1.0.1
 gunicorn
 python-decouple
-aiohttp[speedups]
-APScheduler==2.1.2
-Authlib
+aiohttp[speedups]~=3.7.4.post0
+Authlib~=0.15.4
+schedule~=1.1.0
