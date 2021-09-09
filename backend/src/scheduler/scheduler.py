@@ -27,7 +27,7 @@ def schedule_func(func: Callable, kwargs: dict, delay: int = 10, job_name: str =
     :return: None
     """
 
-    job_exists: list = [job for job in jobs.get_jobs() if str(job).startswith(job_name)]
+    job_exists: list = [job for job in jobs if str(job).startswith(job_name)]
     if job_exists:
         return None
 
