@@ -35,6 +35,4 @@ def schedule_func(func: Callable, kwargs: dict, delay: int = 10, job_name: str =
 
     delayed: datetime = datetime.now() + timedelta(milliseconds=delay)
 
-    job = task_scheduler.add_date_job(func=func, date=delayed, kwargs=kwargs, 
-                                      id=create_unique_id(), name=job_name, misfire_grace_time=360, args=None)
-
+    job = task_scheduler.add_date_job(func=func, date=delayed, kwargs=kwargs, args=None)
