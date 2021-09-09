@@ -27,7 +27,8 @@ admin_api_bp = Blueprint('admin_dashboard', __name__)
 @admin_auth.handle_admin_auth
 def admin_dashboard_routes(current_user: Optional[dict], path: str) -> tuple:
     """
-
+    **admin_dashboard_routes**
+        routes for admin dashboard
     """
     json_data: dict = request.get_json()
     admin_instance: AdminView = AdminView()
