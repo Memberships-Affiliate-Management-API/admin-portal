@@ -10,12 +10,8 @@ __github_profile__ = "https://github.com/freelancing-solutions/"
 __licence__ = "MIT"
 
 import asyncio
-import json
-from json import JSONDecodeError
-from typing import Optional
 
 import aiohttp
-import requests
 from flask import jsonify
 
 from backend.src.cache_manager.cache_manager import cache_man
