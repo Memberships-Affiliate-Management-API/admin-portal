@@ -11,11 +11,9 @@ __github_profile__ = "https://github.com/freelancing-solutions/"
 
 from typing import Callable
 from datetime import datetime, timedelta
-from apscheduler.scheduler import Scheduler
+from schedule import jobs
+from schedule import default_scheduler as task_scheduler
 from backend.src.utils import create_id as create_unique_id
-
-task_scheduler = Scheduler()
-cron_scheduler = Scheduler()
 
 
 def schedule_func(func: Callable, kwargs: dict, delay: int = 10, job_name: str = "schedule_func") -> None:
@@ -29,10 +27,11 @@ def schedule_func(func: Callable, kwargs: dict, delay: int = 10, job_name: str =
     :return: None
     """
 
-    job_exists: list = [job for job in task_scheduler.get_jobs() if str(job).startswith(job_name)]
+    job_exists: list = [job for job in jobs.get_jobs() if str(job).startswith(job_name)]
     if job_exists:
         return None
 
-    delayed: datetime = datetime.now() + timedelta(milliseconds=delay)
+    # delayed: datetime = datetime.now() + timedelta(milliseconds=delay)
+    job = task_scheduler.every(interval=delay).seconds.do(func=func, **kwargs).tag(tag=job_name)
 
-    job = task_scheduler.add_date_job(func=func, date=delayed, kwargs=kwargs, args=None)
+    # job = default.add_date_job(func=func, date=delayed, kwargs=kwargs, args=None)
