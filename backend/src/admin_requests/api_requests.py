@@ -17,7 +17,7 @@ import aiohttp
 
 from backend.src.cache_manager.cache_manager import cache_man
 from backend.src.custom_exceptions.exceptions import EnvironNotSet
-from backend.src.scheduler.scheduler import schedule_func
+from backend.src.scheduler.scheduler import create_task
 from backend.src.utils import create_id, return_ttl
 
 
@@ -90,7 +90,7 @@ class APIRequests:
         headers.update(_request_id=_request_id)
         _kwargs: dict = dict(_url=_url, json_data=body, headers=headers)
         # Scheduling the request to run later and then continue
-        schedule_func(func=self._request, kwargs=_kwargs, delay=1, job_name=_request_id)
+        create_task(func=self._request, kwargs=_kwargs, delay=1, job_name=_request_id)
         # returning the _request_id so it can be used to retrieve the results at a later stage
         return _request_id
 

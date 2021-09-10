@@ -9,29 +9,52 @@ __twitter__ = "@blueitserver"
 __github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affiliate-api"
 __github_profile__ = "https://github.com/freelancing-solutions/"
 
+import json
+import socket
 from typing import Callable
-from datetime import datetime, timedelta
-from schedule import jobs
-from schedule import default_scheduler as task_scheduler
-from backend.src.utils import create_id as create_unique_id
+import pika
+
+from backend.src.custom_exceptions.exceptions import status_codes
+
+connection = None
 
 
-def schedule_func(func: Callable, kwargs: dict, delay: int = 10, job_name: str = "schedule_func") -> None:
-    """
-    **schedule_cache_deletion**
-        schedule cache deletion such that it occurs sometime time in the future
-    :param func:
-    :param kwargs:
-    :param job_name: "schedule_func"
-    :param delay: delay in milliseconds
-    :return: None
+def create_task(func: Callable, kwargs: dict, delay: int = 10, job_name: str = "create_task") -> tuple:
     """
 
-    job_exists: list = [job for job in jobs if str(job).startswith(job_name)]
-    if job_exists:
-        return None
+    """
+    global connection
+    # noinspection PyUnresolvedReferences
+    _body: bytes = json.dumps(dict(func=func.__name__, kwargs=kwargs, job_name=job_name)).encode(encoding='UTF-8')
 
-    # delayed: datetime = datetime.now() + timedelta(milliseconds=delay)
-    job = task_scheduler.every(interval=delay).seconds.do(func=func, **kwargs).tag(tag=job_name)
+    try:
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqps:memberships-rabbitmq'))
+        channel = connection.channel()
+        channel.queue_declare(queue='admin_task_queue', durable=True)
+        channel.basic_publish(
+            exchange='',
+            routing_key='task_queue',
+            body=_body,
+            properties=pika.BasicProperties(
+                delivery_mode=2,  # make message persistent
+            ))
 
-    # job = default.add_date_job(func=func, date=delayed, kwargs=kwargs, args=None)
+    except pika.exceptions.ConnectionClosedByBroker as e:
+        print(f'Create Task Error: {e}')
+        pass
+    # Don't recover on channel errors
+    except pika.exceptions.AMQPChannelError as e:
+        print(f'Create Task Error: {e}')
+        pass
+    # Recover on all other connection errors
+    except pika.exceptions.AMQPConnectionError as e:
+        print(f'Create Task Error: {e}')
+        pass
+    except socket.gaierror as e:
+        print(f'Create Task Error: {e}')
+        pass
+    finally:
+        if not not connection:
+            connection.close()
+
+    return _body, status_codes.status_ok_code

@@ -1,4 +1,3 @@
-
 from authlib.integrations.flask_client import OAuth
 from flask import Flask
 
@@ -6,20 +5,6 @@ from backend.src.admin_requests.api_requests import app_requests
 from backend.src.cache_manager.cache_manager import cache_man
 from backend.src.security.apps_authenticator import app_auth_micro_service
 from config import config_instance
-
-
-# github authenticate - enables developers to easily sign-up to our api
-oauth = OAuth()
-github_authorize = oauth.register(
-    name='github',
-    client_id=config_instance.GITHUB_CLIENT_ID,
-    client_secret=config_instance.GITHUB_CLIENT_SECRET,
-    access_token_url='https://github.com/login/oauth/access_token',
-    access_token_params=None,
-    authorize_url='https://github.com/login/oauth/authorize',
-    authorize_params=None,
-    api_base_url='https://api.github.com/',
-    client_kwargs={'scope': 'user:email'})
 
 
 # noinspection DuplicatedCode
@@ -31,10 +16,9 @@ def create_app(config_class=config_instance):
     # custom asynchronous api request handler
     app_requests.init_app(app=app)
     # github auth handler
-    oauth.init_app(app=app, cache=cache_man.cache)
+    # oauth.init_app(app=app, cache=cache_man.cache)
 
     with app.app_context():
-
         # user facing or public facing api's
         from backend.src.handlers.routes import default_handlers_bp
 
