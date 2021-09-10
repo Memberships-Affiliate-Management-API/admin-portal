@@ -1,2 +1,2 @@
 web: gunicorn run:app
-tasks: tasks:main
+tasks: gunicorn tasks:main
