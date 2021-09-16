@@ -27,7 +27,6 @@ class CacheManager:
     @property
     def cache(self) -> Cache:
         self.total_cache_calls += 1
-        print(self.total_cache_calls)
         return self.app_cache
 
     @property
