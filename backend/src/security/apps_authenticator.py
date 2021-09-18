@@ -49,9 +49,11 @@ class APPAuthenticator:
             **authenticate_with_admin_api**
         """
         # self.refresh_app_id()
+        print('running authenticate')
         _kwargs: dict = dict(app_id=self._app_id, domain=self._app_domain, secret_key=self._secret_key)
         self._auth_request_id = app_requests.schedule_data_send(_endpoint=self._micro_services_auth, body=_kwargs)
-        create_task(func=self.fetch_auth_response, kwargs=dict(), delay=5, job_name='fetch_auth_response')
+        created_task = create_task(func=self.fetch_auth_response, job_name='fetch_auth_response', kwargs=None)
+        print(f'task created: {created_task}')
 
     def fetch_auth_response(self):
         while self.max_retries:
