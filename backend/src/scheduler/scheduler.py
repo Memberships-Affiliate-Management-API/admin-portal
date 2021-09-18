@@ -33,6 +33,6 @@ def create_task(func: Callable, job_name: str, kwargs: Optional[dict] = None) ->
     _job_names: Hashable = hash(job_name)
     if isinstance(kwargs, dict):
         print(f'creating job with kwargs: {kwargs}')
-        return task_scheduler.every(interval=30).seconds.do(func, **kwargs).tag(_job_names)
+        return task_scheduler.every(interval=30).seconds.do(func, **_args, **kwargs).tag(_job_names)
     return task_scheduler.every(interval=30).seconds.do(job_func=func).tag(_job_names)
 
