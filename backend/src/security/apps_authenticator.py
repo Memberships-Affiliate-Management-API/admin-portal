@@ -13,12 +13,15 @@ __github_repo__ = "https://github.com/freelancing-solutions/memberships-and-affi
 __github_profile__ = "https://github.com/freelancing-solutions/"
 
 import time
+
+from retry import retry
 from flask import current_app
 from typing import Optional
 
 from backend.src.admin_requests.api_requests import app_requests
 from backend.src.scheduler.scheduler import create_task
 from backend.src.utils import create_id, return_ttl
+from backend.src.custom_exceptions.exceptions import UnAuthenticatedError
 from config import config_instance
 
 
@@ -55,18 +58,13 @@ class APPAuthenticator:
         created_task = create_task(func=self.fetch_auth_response, job_name='fetch_auth_response', kwargs=None)
         print(f'task created: {created_task}')
 
+    @retry(exceptions=UnAuthenticatedError, tries=3, delay=1)
     def fetch_auth_response(self):
-        while self.max_retries:
-            try:
-                self.auth_details = app_requests.get_response(request_id=self._auth_request_id).get('payload')
-                if self.auth_details:
-                    self.auth_token = self.auth_details['auth_token']
-                    break
-            except AttributeError:
-                pass
-            self.max_retries -= 1
-            time.sleep(1)
-        self.max_retries = 30
+            self.auth_details = app_requests.get_response(request_id=self._auth_request_id).get('payload')
+            if self.auth_details:
+                self.auth_token = self.auth_details['auth_token']
+                return None
+            raise UnAuthenticatedError()
 
 
 app_auth_micro_service: APPAuthenticator = APPAuthenticator()

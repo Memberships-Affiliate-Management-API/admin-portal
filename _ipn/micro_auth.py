@@ -28,17 +28,18 @@ def verify_app_id() -> tuple:
         if it can also verify the identity of the api server through its domain and also the secret key
     """
     json_data: dict = request.get_json()
+    print(f'json data : {json_data}')
     domain: str = json_data.get('domain')
     app_id: str = json_data.get('app_id')
-    secret_key: str = json_data.get('secret_key')
-
+    secret_key: str = json_data.get('SECRET_KEY')
+    print(f'secret_key : {secret_key}')
     _secret_key: str = config_instance.SECRET_KEY
     _admin_domain: str = config_instance.ADMIN_APP_BASEURL
 
     admin_domain_compare: bool = hmac.compare_digest(domain, _admin_domain)
     secret_key_compare: bool = hmac.compare_digest(secret_key, _secret_key)
 
-    _payload: dict = dict(domain=domain, app_id=app_id, secret_key=secret_key)
+    _payload: dict = dict(domain=domain, app_id=app_id, SECRET_KEY=secret_key)
 
     if admin_domain_compare and secret_key_compare:
         return jsonify({'status': True, 'payload': _payload, 'message': 'app id verified'}), status_codes.status_ok_code
