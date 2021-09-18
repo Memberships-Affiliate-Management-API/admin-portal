@@ -42,7 +42,7 @@ def create_app(config_class=config_instance):
 
         # Error Handlers
         app.register_blueprint(default_handlers_bp)
-
+        app.tasks_thread = None
         app.before_first_request(f=app_auth_micro_service.authenticate_with_admin_api)
 
         # app_auth_micro_service.authenticate_with_admin_api()

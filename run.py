@@ -31,10 +31,10 @@ def create_thread() -> None:
     """
     """
     try:
-        if app.tasks_thread:
-            print('thread already created')
-            return None
-        app.tasks_thread = Thread(target=run_tasks)
+        if not app.tasks_thread:
+            app.tasks_thread = Thread(target=run_tasks)
+            print('Tasks Thread Created')
+        return None
     except AttributeError as e:
         print(str(e))
     finally:
@@ -47,7 +47,7 @@ def run_thread(response: Response) -> Response:
 
     """
     try:
-        if not app.tasks_thread.is_alive():
+        if isinstance(app.tasks_thread, Thread) and not app.tasks_thread.is_alive():
             app.tasks_thread.start()
     except RuntimeError as e:
         print(str(e))

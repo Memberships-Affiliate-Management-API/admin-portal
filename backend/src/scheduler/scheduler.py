@@ -13,7 +13,7 @@ from typing import Callable, Hashable, Optional
 from schedule import Scheduler, Job, repeat, every, run_pending
 
 task_scheduler = Scheduler()
-cron_scheduler = Scheduler()
+# cron_scheduler = Scheduler()
 
 
 def create_task(func: Callable, job_name: str = "create_task", kwargs: Optional[dict] = None) -> tuple:
