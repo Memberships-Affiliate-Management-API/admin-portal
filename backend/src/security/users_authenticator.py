@@ -9,6 +9,7 @@ __github_profile__ = "https://github.com/freelancing-solutions/"
 __licence__ = "MIT"
 
 import datetime
+import hmac
 from functools import wraps
 from typing import Optional
 
@@ -84,11 +85,13 @@ class AdminAuth:
             return None
 
         if isinstance(current_user, dict):
-            return current_user and current_user.get('uid') and (
-                    current_user.get('organization_id') == config_instance.ORGANIZATION_ID)
+            is_organization_valid: bool = hmac.compare_digest(current_user.get('organization_id', 'invalid'),
+                                                              config_instance.ORGANIZATION_ID)
+            return current_user and current_user.get('uid') and is_organization_valid
 
         # noinspection PyUnresolvedReferences
-        return current_user and current_user.uid and (current_user.organization_id == config_instance.ORGANIZATION_ID)
+        is_organization_valid: bool = hmac.compare_digest(current_user.organization_id, config_instance.ORGANIZATION_ID)
+        return current_user and current_user.uid and is_organization_valid
 
     @staticmethod
     def encode_auth_token(uid: str) -> str:
