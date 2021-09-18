@@ -90,7 +90,7 @@ class APIRequests:
         headers.update(_request_id=_request_id)
         _kwargs: dict = dict(_url=_url, json_data=body, headers=headers)
         # Scheduling the request to run later and then continue
-        create_task(func=self._request, kwargs=_kwargs, delay=1, job_name=_request_id)
+        create_task(func=self._request, job_name=_request_id, kwargs=_kwargs)
         # returning the _request_id so it can be used to retrieve the results at a later stage
         return _request_id
 
