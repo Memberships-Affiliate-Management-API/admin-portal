@@ -164,9 +164,7 @@ class AdminAuth:
         # noinspection PyBroadException
         @wraps(func)
         def decorated(*args, **kwargs):
-
             token: Optional[str] = None
-
             app_token: str = app_auth_micro_service.auth_token
             domain: str = request.headers.get('Origin')
 
@@ -177,7 +175,6 @@ class AdminAuth:
             # NOTE: if running on development server by-pass authentication and return admin user
             if not bool(token):
                 raise UnAuthenticatedError(description="You are not logged in please login to proceed")
-
             try:
                 uid: Optional[str] = self.decode_auth_token(auth_token=token)
                 if bool(uid):
@@ -190,7 +187,6 @@ class AdminAuth:
 
             except jwt.DecodeError:
                 raise UnAuthenticatedError(description="Error with your login credentials please login again")
-
             except Exception:
                 raise UnAuthenticatedError(description="Error with your login credentials please login again")
             return func(current_user, *args, **kwargs)
