@@ -45,8 +45,7 @@ function return_organizations_dom(){
             <div class="card-header">
                 <h3 class="card-title"> Organizations </h3>
                 <br />
-                <span class="card-text"> Memberships &amp; Affiliates - Organizations</span>
-                         
+                <span class="card-text"> Memberships &amp; Affiliates - Organizations</span>                         
             </div>
             <div class="card-body">      
                 <!-- insert a table of organizations here as contents -->

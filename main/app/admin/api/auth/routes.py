@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, make_response
 from backend.src.admin_view import AdminView
 from backend.src.custom_exceptions.exceptions import status_codes
 from backend.src.security.apps_authenticator import app_auth_micro_service
+from backend.src.utils import is_development
 
 auth_admin_api_bp = Blueprint('admin_auth_api', __name__)
 
@@ -15,6 +16,8 @@ def auth_api(path: str) -> tuple:
     # Application authentication token
     app_token: str = app_auth_micro_service.auth_token
     domain: str = request.headers.get('Origin')
+    if domain == 'http://localhost:8082/' and is_development():
+        domain = 'http://127.0.0.1:8082/'
 
     if path == 'login':
         json_data: dict = request.get_json()
