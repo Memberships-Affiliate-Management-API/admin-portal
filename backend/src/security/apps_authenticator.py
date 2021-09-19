@@ -30,6 +30,7 @@ class APPAuthenticator:
     **Class APPAuthenticator**
         upon start-up and consequently after that the application must authenticate with the api's
     """
+
     def __init__(self):
         self._is_running: bool = False
         self._app_id: str = create_id()
@@ -60,11 +61,11 @@ class APPAuthenticator:
 
     @retry(exceptions=UnAuthenticatedError, tries=3, delay=1)
     def fetch_auth_response(self):
-            self.auth_details = app_requests.get_response(request_id=self._auth_request_id).get('payload')
-            if self.auth_details:
-                self.auth_token = self.auth_details['auth_token']
-                return None
-            raise UnAuthenticatedError()
+        self.auth_details = app_requests.get_response(request_id=self._auth_request_id).get('payload')
+        if self.auth_details:
+            self.auth_token = self.auth_details['auth_token']
+            return None
+        raise UnAuthenticatedError()
 
 
 app_auth_micro_service: APPAuthenticator = APPAuthenticator()
