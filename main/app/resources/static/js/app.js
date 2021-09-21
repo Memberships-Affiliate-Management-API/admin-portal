@@ -151,10 +151,10 @@ let sidebar_menu_handler = async (_endpoint)=> {
 
     let request = new Request(request_uri, init_post)
     let response = await fetch(request)
+    const _result = await response.json()
     // console.log(await response.text())
     const selector = _endpoint.split("/")[4]
     const handle_bars_dom = await load_dom_resources(selector)
-    const _result = await response.json()
     document.getElementById('content').innerHTML = await process_dom(handle_bars_dom, _result)
 }
 
