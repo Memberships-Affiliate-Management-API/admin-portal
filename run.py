@@ -29,6 +29,8 @@ debug = is_development() and config_instance.DEBUG
 @app.before_request
 def create_thread() -> None:
     """
+        **create_thread**
+            creates a new thread to run a task if one does not already exist
     """
     try:
         if not isinstance(app.tasks_thread, Thread):
@@ -43,7 +45,8 @@ def create_thread() -> None:
 @app.after_request
 def run_thread(response: Response) -> Response:
     """
-
+        **run_thread**
+            runs tasks in a separate thread
     """
     try:
         if isinstance(app.tasks_thread, Thread) and not app.tasks_thread.is_alive():
