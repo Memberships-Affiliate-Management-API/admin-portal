@@ -74,10 +74,9 @@ class DataServiceError(HTTPException):
 
     def __init__(self, status: Optional[int] = None, description: Optional[str] = None):
         super(DataServiceError, self).__init__(description=description)
-        if bool(description):
-            self.description = description
-        if bool(status):
-            self.code = status
+
+        self.description = description if description else DataServiceError.description
+        self.code = status if status else DataServiceError.code
 
     def __str__(self) -> str:
         return f"<DataServiceError Description: {self.description} Code: {self.code}"
@@ -99,10 +98,8 @@ class InputError(Exception):
 
     def __init__(self, status: Optional[int] = None, description: Optional[str] = None):
         super(InputError, self).__init__()
-        if bool(description):
-            self.description = description
-        if bool(status):
-            self.code = status
+        self.description = description if description else InputError.description
+        self.code = status if status else InputError.code
 
     def __str__(self) -> str:
         return f"<InputError Description: {self.description} Code: {self.code}"
@@ -122,11 +119,8 @@ class UnAuthenticatedError(HTTPException):
 
     def __init__(self, status: Optional[int] = None, description: Optional[str] = None):
         super(UnAuthenticatedError, self).__init__(description=description)
-        if bool(description):
-            self.description = description
-
-        if bool(status):
-            self.code = status
+        self.description = description if description else UnAuthenticatedError.description
+        self.code = status if status else UnAuthenticatedError.code
 
     def __str__(self) -> str:
         return f"<UnAuthenticated Description: {self.description} Code: {self.code}"
@@ -145,17 +139,12 @@ class RequestError(HTTPException):
     code: int = error_codes.bad_request_error_code
     description: str = "Bad Request Error: cannot proceed"
 
-    def __init__(self, status: Optional[int] = None, description: Optional[str] = None,
-                 url: Optional[str] = None):
-        super(RequestError, self).__init__(description=description)
-        if bool(description):
-            self.description = description
+    def __init__(self, status: Optional[int] = None, description: Optional[str] = None, url: Optional[str] = None):
+        super().__init__(description=description)
 
-        if bool(url):
-            self.description = "{} on url: {}".format(description, url)
-
-        if bool(status):
-            self.code = status
+        temp_desc = description if description else RequestError.description
+        self.description = f"{description} on url: {url}" if url else temp_desc
+        self.code = status if status else RequestError.code
 
     def __str__(self) -> str:
         return f"<RequestError  Description: {self.description} Code: {self.code}"
@@ -178,18 +167,12 @@ class RemoteDataError(IOError):
     description: str = 'Error connecting to remote server'
     url: str = ""
 
-    def __init__(self, status: Optional[int] = None, description: Optional[str] = None,
-                 url: Optional[str] = None):
-        super(RemoteDataError, self).__init__()
+    def __init__(self, status: Optional[int] = None, description: Optional[str] = None, url: Optional[str] = None):
+        super().__init__()
 
-        if bool(description):
-            self.description = "{} {}".format(description, url)
-
-        if bool(status):
-            self.code = status
-
-        if bool(url):
-            self.url = url
+        self.description = f"{description} {url}" if description else RemoteDataError.description
+        self.code = status if status else RemoteDataError.code
+        self.url = url if url else ""
 
     def __str__(self) -> str:
         return f"<RemoteDataError Description: {self.description} Code: {self.code} URL: {self.url}"
@@ -206,18 +189,12 @@ class EnvironNotSet(EnvironmentError):
     description: str = "environment variables not set please inform admin"
     url: str = ""
 
-    def __init__(self, status: Optional[int] = None, description: Optional[str] = None,
-                 url: Optional[str] = None):
-        super(EnvironNotSet, self).__init__()
+    def __init__(self, status: Optional[int] = None, description: Optional[str] = None, url: Optional[str] = None):
+        super().__init__()
 
-        if bool(description) and bool(url):
-            self.description = "{} {}".format(description, url)
-
-        if bool(status):
-            self.code = status
-
-        if bool(url):
-            self.url = url
+        self.description = f"{description} on {url}" if bool(description) and bool(url) else EnvironNotSet.description
+        self.code = status if status else EnvironNotSet.code
+        self.url = url if url else ""
 
     def __str__(self) -> str:
         return f"<EnvironNotSet Description: {self.description} Code: {self.code} URL: {self.url}"
