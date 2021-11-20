@@ -13,9 +13,8 @@ import hmac
 from flask import Blueprint, jsonify, request
 
 from backend.src.custom_exceptions.exceptions import status_codes, UnAuthenticatedError
-from backend.src.utils import return_ttl, is_development
 from config import config_instance
-from backend.src.cache_manager.cache_manager import cache_man
+
 microservices_ipn_bp = Blueprint("microservices_ipn", __name__)
 
 
