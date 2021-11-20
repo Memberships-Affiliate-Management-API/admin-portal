@@ -50,9 +50,11 @@ class Config:
         # TODO obtain correct paypal client ids
 
         self.IS_PRODUCTION: bool = True
-        self.CACHE_TYPE: str = "simple"
+        self.CACHE_TYPE: str = "redis"
+        self.CACHE_REDIS_HOST: str = os.environ.get("CACHE_REDIS_HOST") or config("CACHE_REDIS_HOST")
+        self.CACHE_REDIS_PORT: str = os.environ.get("CACHE_REDIS_PORT") or config("CACHE_REDIS_PORT")
+        self.CACHE_REDIS_PASSWORD: str = os.environ.get("CACHE_REDIS_PASSWORD") or config("CACHE_REDIS_PASSWORD")
         self.CACHE_DEFAULT_TIMEOUT: int = 60 * 60 * 6
-        self.MEM_CACHE_SERVER_URI: str = ""
         self.PAYMENT_PLANS_SCHEDULES: typing.List[str] = ['monthly', 'quarterly', 'annually']
         self.PAYMENT_PLANS_PAYMENT_DAYS: typing.List[int] = [1, 2, 3, 4, 5]
         self.MINIMUM_WITHDRAWAL_AMOUNT_USD: int = 3000  # amount is in cents 30 Dollars
@@ -84,15 +86,16 @@ class Config:
 
     def cache_dict(self) -> dict:
         """
-            Consider converting the cache to MEM_CACHE Type or Redis
-            preferably host the cache as a docker instance on Cloud Run
+            **cache_dict**
+            returns cache settings
         :return: dict
         """
-        # TODO use memcached
+        # TODO : add support for redis cache instead of using simple cache
         return {
-            "CACHE_TYPE": "simple",
-            "CACHE_DEFAULT_TIMEOUT": self.CACHE_DEFAULT_TIMEOUT,
-            "CACHE_KEY_PREFIX": "memberships_cache_"
+            "CACHE_TYPE": self.CACHE_TYPE,
+            "CACHE_REDIS_HOST": self.CACHE_REDIS_HOST,
+            "CACHE_REDIS_PORT": self.CACHE_REDIS_PORT,
+            "CACHE_REDIS_PASSWORD": self.CACHE_REDIS_PASSWORD
         }
 
 
